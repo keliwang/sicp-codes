@@ -180,3 +180,24 @@
 	guess
 	(cube-root-iter improved-guess))))
   (cube-root-iter 1.0))
+
+;; linear recursive factorial
+(define (factorial1 n)
+  (if (= n 1)
+    1
+    (* n (factorial1 (- n 1)))))
+
+;; linear iterative factorial
+(define (factorial2 n)
+  (define (iter product counter max-count)
+    (if (> counter max-count)
+      product
+      (iter (* product counter)
+		 (+ counter 1)
+		 max-count)))
+  (iter 1 1 n))
+
+;; chez scheme中trace调用的方法
+;; > (trace factorial1)
+;; > (factorial1 6)
+;; > (untrace factorial1)
