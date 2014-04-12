@@ -139,7 +139,9 @@
 ;; 由上可知，当x小于0.001时，(square guess)更为接近0.001而不是x；同时当x越接近0.001，
 ;; 它首0.001的影响也越大。
 ;; 对于过大的值，程序在获得满足条件的值之前可能因为improve计算时的精度问题导致每次产生
-;; 的guess值都是其自身。运行(sqrt1 1e13)即可。
+;; 的guess值都是其自身。其原因也很直观，当guess越来越接近真实值时，每次improve的量必然越来越小，
+;; 当x较大时，guess的小数部分的位数就会减小，从而无法承载非常小的值。
+;; 运行(sqrt1 1e13)即可看到具体的情况。
 ;; 以下是改进算法
 (define (sqrt2 x)
   (define (improve guess x)
@@ -164,7 +166,7 @@
 	guess
 	(sqrt-iter improved-guess))))
   (sqrt-iter 1.0))
-;; 改进后的方案对极小和极大的数都有效果
+;; 改进后的方案对极小和极大的数都有很好的效果
 
 ;; Exercise 1.8
 (define (cube-root x)
