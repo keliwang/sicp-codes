@@ -201,3 +201,37 @@
 ;; > (trace factorial1)
 ;; > (factorial1 6)
 ;; > (untrace factorial1)
+
+;; Exercise 1.9
+;; 两个辅助函数
+(define (inc n)
+  (+ n 1))
+(define (dec n)
+  (- n 1))
+
+;; 下面使用add来替代+作为函数名
+(define (add1 a b)
+  (if (= a 0)
+    b
+    (inc (+ (dec a) b))))
+(define (add2 a b)
+  (if (= a 0)
+    b
+    (+ (dec a) (inc b))))
+;; 展开(add1 4 5)，recursive
+;; (add1 4 5)
+;; (inc (+ 3 5))
+;; (inc (inc (+ 2 5)))
+;; (inc (inc (inc (+ 1 5))))
+;; (inc (inc (inc (inc 5))))
+;; (inc (inc (inc 6)))
+;; (inc (inc 7))
+;; (inc 8)
+;; 9
+;; 展开(add2 4 5)，iterative
+;; (add2 4 5)
+;; (+ 3 6)
+;; (+ 2 7)
+;; (+ 1 8)
+;; (+ 0 9)
+;; 9
