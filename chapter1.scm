@@ -323,3 +323,11 @@
 	  (first-less-than-boundary 2 n)
 	  (first-less-than-boundary 1 n)
 	  n)))
+
+;; Exercise 1.12
+;; 行和列都是从1开始计数
+(define (pascal-triangle row col)
+  (if (or (= col 1) (= row col))
+    1
+    (+ (pascal-triangle (- row 1) (- col 1))
+       (pascal-triangle (- row 1) col))))
