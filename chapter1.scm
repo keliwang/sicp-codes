@@ -261,3 +261,18 @@
 ;; (define (h n) (A 2 n))
 ;; h(0) = 2
 ;; h(n) = 2^h(n-1)
+
+;; tree recursive fibonacci
+(define (fib1 n)
+  (cond ((= n 0) 0)
+	((= n 1) 1)
+	(else (+ (fib1 (- n 1))
+		 (fib1 (- n 2))))))
+
+;; iterative fibonacci
+(define (fib2 n)
+  (define (iter a b count)
+    (if (= count 0)
+      b
+      (iter (+ a b) a (- count 1))))
+  (iter 1 0 n))
