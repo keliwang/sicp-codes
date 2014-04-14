@@ -374,8 +374,13 @@
 
 (define (my-even? n)
   (= (remainder n 2) 0))
-(define (fast-expt b n)
+(define (fast-expt-recursive-1 b n)
   (cond ((= n 0) 1)
-	((even? n) (fast-expt (* b b) (/ n 2)))
+	((even? n) (fast-expt-recursive-1 (* b b) (/ n 2)))
 	(else (* b
-		 (fast-expt b (- n 1))))))
+		 (fast-expt-recursive-1 b (- n 1))))))
+(define (fast-expt-recursive-2 b n)
+  (cond ((= n 0) 1)
+	((even? n) (square (fast-expt-recursive-2 b (/ n 2))))
+	(else (* b
+		 (fast-expt-recursive-2 b (- n 1))))))
