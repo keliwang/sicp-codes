@@ -331,3 +331,31 @@
     1
     (+ (pascal-triangle (- row 1) (- col 1))
        (pascal-triangle (- row 1) col))))
+
+;; Exercise 1.14
+;; (count-change 11)
+;; > 4
+;; Order of growth
+
+;; Exercise 1.15
+(define (cube x) (* x x x))
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+(define (sine angle)
+  (if (not (> (abs angle) 0.1))
+    angle
+    (p (sine (/ angle 3.0)))))
+;; (a) p一共会被调用5次
+;; (sine 12.15)
+;; (p (sine 4.05))
+;; (p (p (sine 1.35)))
+;; (p (p (p (sine 0.45))))
+;; (p (p (p (p (sine 0.15)))))
+;; (p (p (p (p (p (sine 0.05))))))
+;; 到这里有0.05<0.1，延迟的p可以逐步执行了，可以看到p会被调用5次。
+;; (b) Order of growth
+;; 假设sine一共需要被调用n次，则我没有：
+;; 	a <= 0.1*3^n
+;;	=> n >= log_3(10*a)
+;; 也就是说当输入每次增长3倍时，执行步骤会按线性增长。
+;; 同理，所需要的空间也是一样，因为执行步骤每涨一步，都有一个p会被延迟计算。
+;; 因而其复杂度为O(log n)。
