@@ -359,3 +359,15 @@
 ;; 也就是说当输入每次增长3倍时，执行步骤会按线性增长。
 ;; 同理，所需要的空间也是一样，因为执行步骤每涨一步，都有一个p会被延迟计算。
 ;; 因而其复杂度为O(log n)。
+
+;; 计算指数
+(define (expt-recursive b n)
+  (if (= n 0)
+    1
+    (* b (expt-recursive b (- n 1)))))
+(define (expt-iterative b n)
+  (define (iter product base count)
+    (if (= count 0)
+      product
+      (iter (* product base) base (- count 1))))
+  (iter 1 b n))
