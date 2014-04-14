@@ -371,3 +371,11 @@
       product
       (iter (* product base) base (- count 1))))
   (iter 1 b n))
+
+(define (my-even? n)
+  (= (remainder n 2) 0))
+(define (fast-expt b n)
+  (cond ((= n 0) 1)
+	((even? n) (fast-expt (* b b) (/ n 2)))
+	(else (* b
+		 (fast-expt b (- n 1))))))
