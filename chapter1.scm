@@ -376,7 +376,7 @@
   (= (remainder n 2) 0))
 (define (fast-expt-recursive-1 b n)
   (cond ((= n 0) 1)
-	((even? n) (fast-expt-recursive-1 (* b b) (/ n 2)))
+	((even? n) (fast-expt-recursive-1 (square b) (/ n 2)))
 	(else (* b
 		 (fast-expt-recursive-1 b (- n 1))))))
 (define (fast-expt-recursive-2 b n)
@@ -384,3 +384,15 @@
 	((even? n) (square (fast-expt-recursive-2 b (/ n 2))))
 	(else (* b
 		 (fast-expt-recursive-2 b (- n 1))))))
+
+;; Exercise 1.16
+(define (fast-expt-iterative b n)
+  (define (iter product base counter)
+    (cond ((= counter 0) product)
+	  ((even? counter) (iter product
+				 (square base)
+				 (/ counter 2)))
+	  (else (iter (* product base)
+		      base
+		      (- counter 1)))))
+  (iter 1 b n))
