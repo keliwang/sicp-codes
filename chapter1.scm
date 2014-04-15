@@ -422,3 +422,26 @@
 		      base
 		      (- counter 1)))))
   (iter 0 a b))
+
+;; Exercise 1.19
+;; 将变换
+;;   a <- bq + aq + ap
+;;   b <- bp + aq
+;; 连续带入两次并简化即可得到新的变换序列
+;;   p' = p^2 + q^2
+;;   q' = q^2 + 2pq
+(define (fast-fib n)
+  (define (iter a b p q count)
+    (cond ((= count 0) b)
+	  ((even? count)
+	   (iter a
+		 b
+		 (+ (square p) (square q))
+		 (+ (square q) (* 2 p q))
+		 (halve count)))
+	  (else (iter (+ (* b q) (* a q) (* a p))
+		      (+ (* b p) (* a q))
+		      p
+		      q
+		      (- count 1)))))
+  (iter 1 0 0 1 n))
