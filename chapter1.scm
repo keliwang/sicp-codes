@@ -445,3 +445,10 @@
 		      q
 		      (- count 1)))))
   (iter 1 0 0 1 n))
+
+;; 最大公约数, GCD
+;; 复杂度theta(log n), lame's theorem
+(define (gcd a b)
+  (if (= b 0)
+    a
+    (gcd b (remainder a b))))
