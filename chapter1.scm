@@ -411,3 +411,14 @@
 	((even? b) (fast-mul (double a) (halve b)))
 	(else
 	  (+ a (fast-mul a (- b 1))))))
+
+;; Exercise 1.18
+(define (fast-mul-iterative a b)
+  (define (iter product base counter)
+    (cond ((= counter 0) product)
+	  ((even? counter)
+	   (iter product (double base) (halve counter)))
+	  (else (iter (+ product base)
+		      base
+		      (- counter 1)))))
+  (iter 0 a b))
