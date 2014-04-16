@@ -530,3 +530,11 @@
   (cond ((= times 0) #t)
 	((fermat-test n) (fast-prime? n (- times 1)))
 	(else #f)))
+
+;; Exercise 1.21
+(smallest-divisor 199)
+;; => 199
+(smallest-divisor 1999)
+;; => 1999
+(smallest-divisor 19999)
+;; => 7
