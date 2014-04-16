@@ -499,3 +499,15 @@
 ;(if (= 2 0)
   ;4
   ;(gcd 2 (remainder 4 2)))
+
+;; 质数检测
+(define (divide? a b)
+  (= (remainder b a) 0))
+(define (smallest-divisor n)
+  (define (find-divisor n test-divisor)
+    (cond ((> (square test-divisor) n) n)
+	  ((divide? test-divisor n) test-divisor)
+	  (else (find-divisor n (+ test-divisor 1)))))
+  (find-divisor n 2))
+(define (prime? n)
+  (= n (smallest-divisor n)))
