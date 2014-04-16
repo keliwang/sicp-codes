@@ -1,5 +1,3 @@
-#lang planet neil/sicp
-
 ;; compute square of x
 (define (square x)
   (* x x))
@@ -542,3 +540,50 @@
 ;; => 7
 
 ;; Exercise 1.22
+(define (runtime-helper now)
+  (+ (* (time-second now) 1e9) (time-nanosecond now)))
+(define (runtime)
+  (runtime-helper (current-time)))
+
+(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+(define (start-prime-test n start-time)
+  (if (prime? n)
+    (report-prime (- (runtime) start-time))))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+
+(define (search-for-primes start count)
+  (define (search start count)
+    (if (not (= count 0))
+      (cond ((prime? start)
+	     (timed-prime-test start)
+	     (search (+ start 2) (- count 1)))
+	    (else
+	      (search (+ start 2) count)))))
+  (if (even? start)
+    (search (+ start 1) count)
+    (search start count)))
+
+;; > (search-for-primes 1000 3)
+;; 1009 *** 11776.0
+;; 1013 *** 12544.0
+;; 1019 *** 7936.0
+;; > (search-for-primes 10000 3)
+;; 10007 *** 33536.0
+;; 10009 *** 20992.0
+;; 10037 *** 20992.0
+;; > (search-for-primes 100000 3)
+;; 100003 *** 65536.0
+;; 100019 *** 61184.0
+;; 100043 *** 61440.0
+;; > (search-for-primes 1000000 3)
+;; 1000003 *** 192000.0
+;; 1000033 *** 188416.0
+;; 1000037 *** 188160.0√
+
+;; 由上面的结果可以看到prime?是符合
+;; 预期的复杂度的，即√n。√10 = 3.1622。
