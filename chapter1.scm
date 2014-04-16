@@ -587,3 +587,51 @@
 
 ;; 由上面的结果可以看到prime?是符合
 ;; 预期的复杂度的，即√n。√10 = 3.1622。
+
+;; Exercise 1.23
+(define (smallest-divisor-using-next n)
+  (define (next test-divisor)
+    (if (= test-divisor 2)
+      3
+      (+ test-divisor 2)))
+  (define (find-divisor n test-divisor)
+    (cond ((> (square test-divisor) n) n)
+	  ((divide? test-divisor n) test-divisor)
+	  (else (find-divisor n (next test-divisor)))))
+  (find-divisor n 2))
+(define (prime?-with-next n)
+  (= n (smallest-divisor-using-next n)))
+(define (timed-prime-test-with-next n)
+  (define (start-prime-test n start-time)
+    (if (prime?-with-next n)
+      (report-prime (- (runtime) start-time))))
+  (define (report-prime elapsed-time)
+    (display " *** ")
+    (display elapsed-time))
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+;; --------------------------------------------------
+;; |number  | old time (ns) | new time (ns) | ratio |
+;; --------------------------------------------------
+;; |1009    |    19200      |  16640        | 1.15  |
+;; |1013    |    21248      |  18176        | 1.17  |
+;; |1019    |    19456      |  17152        | 1.13  |
+;; |10007   |    33536      |  30464        | 1.10  |
+;; |10009   |    31744      |  25856        | 1.23  |
+;; |10037   |    34304      |  24320        | 1.41  |
+;; |100003  |    72448      |  50688        | 1.43  |
+;; |100019  |    73472      |  51456        | 1.43  |
+;; |100043  |    72448      |  51456        | 1.41  |
+;; |1000003 |    200192     |  135424       | 1.48  |
+;; |1000033 |    200704     |  136192       | 1.47  |
+;; |1000037 |    200448     |  137216       | 1.46  |
+;; |10000019|    641024     |  398848       | 1.61  |
+;; |10000079|    601600     |  398848       | 1.51  |
+;; |10000103|    639232     |  401664       | 1.59  |
+;; --------------------------------------------------
+;; 由上面的结果我们可以看到，效率的提升并没有达到期望中
+;; 的2倍，而是随着数字的增大而逐渐接近2倍。这其中的时间损耗
+;; 主要是我们使用next函数来替换+这个基本操作符所引入的时间损耗。
+;; 随着数字的增大，引入这个函数带来的影响逐步被弱化，从而结果
+;; 越来越接近2倍。
