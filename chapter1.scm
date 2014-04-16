@@ -1,3 +1,5 @@
+#lang planet neil/sicp
+
 ;; compute square of x
 (define (square x)
   (* x x))
@@ -238,27 +240,27 @@
 
 ;; Exercise 1.10
 ;; Ackermann's function
-(define (A x y)
+(define (Ackermann x y)
   (cond ((= y 0) 0)
 	((= x 0) (* 2 y))
 	((= y 1) 2)
-	(else (A (- x 1) (A x (- y 1))))))
+	(else (Ackermann (- x 1) (Ackermann x (- y 1))))))
 
-(A 1 10)
+(Ackermann 1 10)
 ;; => 1024
-(A 2 4)
+(Ackermann 2 4)
 ;; => 65536
-(A 3 3)
+(Ackermann 3 3)
 ;; => 65536
-;; (A 2 (A 3 2))
-;; (A 2 (A 2 (A 3 1)))
-;; (A 2 (A 2 2))
+;; (Ackermann 2 (Ackermann 3 2))
+;; (Ackermann 2 (Ackermann 2 (Ackermann 3 1)))
+;; (Ackermann 2 (Ackermann 2 2))
 
-;; (define (f n) (A 0 n))
+;; (define (f n) (Ackermann 0 n))
 ;; f(n) = 2n
-;; (define (g n) (A 1 n))
+;; (define (g n) (Ackermann 1 n))
 ;; g(n) = 2^n
-;; (define (h n) (A 2 n))
+;; (define (h n) (Ackermann 2 n))
 ;; h(0) = 2
 ;; h(n) = 2^h(n-1)
 
@@ -339,8 +341,8 @@
 
 ;; Exercise 1.15
 (define (cube x) (* x x x))
-(define (p x) (- (* 3 x) (* 4 (cube x))))
 (define (sine angle)
+  (define (p x) (- (* 3 x) (* 4 (cube x))))
   (if (not (> (abs angle) 0.1))
     angle
     (p (sine (/ angle 3.0)))))
@@ -408,9 +410,9 @@
     (+ a (mul a (- b 1)))))
 (define (fast-mul-recursive a b)
   (cond ((= b 0) 0)
-	((even? b) (fast-mul (double a) (halve b)))
+	((even? b) (fast-mul-recursive (double a) (halve b)))
 	(else
-	  (+ a (fast-mul a (- b 1))))))
+	  (+ a (fast-mul-recursive a (- b 1))))))
 
 ;; Exercise 1.18
 (define (fast-mul-iterative a b)
@@ -527,9 +529,9 @@
     (= (expmod a n n) a))
   (try-it (+ 1 (random (- n 1)))))
 (define (fast-prime? n times)
-  (cond ((= times 0) #t)
+  (cond ((= times 0) true)
 	((fermat-test n) (fast-prime? n (- times 1)))
-	(else #f)))
+	(else false)))
 
 ;; Exercise 1.21
 (smallest-divisor 199)
@@ -538,3 +540,5 @@
 ;; => 1999
 (smallest-divisor 19999)
 ;; => 7
+
+;; Exercise 1.22
