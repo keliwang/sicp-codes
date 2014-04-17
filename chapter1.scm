@@ -516,6 +516,11 @@
 (define true #t)
 (define false #f)
 
+;; 不要使用(square base)来递进，这会导致
+;; base的值越来越大，导致计算速度减慢，
+;; 将square放在expmod的外围，可以充分利用
+;; remainder来减小计算量，因为expmod计算结果
+;; 都只是值相对较小的余数。
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
 	((even? exp)
