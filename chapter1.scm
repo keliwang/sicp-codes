@@ -729,3 +729,26 @@
 ;; 后，明显可以看出，我们不得不将(expmod base (/ exp 2) m)计算两次。
 ;; 这样expmod的计算量大大增加了，其复杂度从使用square时的theta(log n)
 ;; 升到使用显式乘法时的theta(n)。
+
+;; Exercise 1.27
+;; 这个过程对于真正的质数也会返回#t
+(define (test-carmichael-number n)
+  (define (test-iter a n)
+    (if (= a 0)
+      true
+      (if (= (expmod a n n) a)
+	(test-iter (- a 1) n)
+	false)))
+  (test-iter (- n 1) n))
+;; (test-carmichael-number 561)
+;; => #t
+;; (test-carmichael-number 1105)
+;; => #t
+;; (test-carmichael-number 1729)
+;; => #t
+;; (test-carmichael-number 2465)
+;; => #t
+;; (test-carmichael-number 2821)
+;; => #t
+;; (test-carmichael-number 6601)
+;; => #t
