@@ -709,3 +709,23 @@
 ;; 2. 不使用fast-expt的expmod为什么要更快呢？因为它将整个计算过程分解了，
 ;; 它将求余和求指数的过程穿插起来，使用remainder将expmod的值始终限定在较小
 ;; 的范围内，从而避免了对超大数的计算，加快了运算速度。
+
+
+;; Exercise 1.26
+;; (define (expmod base exp m)
+;;   (cond ((= exp 0) 1)
+;; 	((even? exp)
+;; 	 (remainder (* (expmod base (/ exp 2) m)
+;; 		       (expmod base (/ exp 2) m))
+;; 		    m))
+;; 	(else
+;; 	  (remainder (* base
+;; 			(expmod base (- exp 1) m))
+;; 		     m))))
+;; 上面的expmod过程将square展开为了显式的乘法，使得
+;; expmod的计算量完全没有降低。使用square时，我们只需要
+;; 计算(expmod base (/ exp 2) m)一次，从而降低了计算量，
+;; 达到了提高计算速度的效果。当我们用显式的乘法来代替square
+;; 后，明显可以看出，我们不得不将(expmod base (/ exp 2) m)计算两次。
+;; 这样expmod的计算量大大增加了，其复杂度从使用square时的theta(log n)
+;; 升到使用显式乘法时的theta(n)。
