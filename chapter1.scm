@@ -826,3 +826,12 @@
   (define (pi-next x)
     (+ x 4))
   (sum pi-term a pi-next b))
+
+;; 下面的integral可以用来计算积分
+(define (integral f a b dx)
+  (define (add-dx x)
+    (+ x dx))
+  (* (sum f (+ a (/ dx 2.0)) add-dx b)
+     dx))
+;; 下面的语句就是计算x^3在0-1上的积分，取dx=0.001
+(integral cube 0 1 0.001)
