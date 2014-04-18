@@ -857,3 +857,11 @@
 ;; => 0.249999875000001
 ;; 有上面结果可以看出simpson-integral的计算结果要比
 ;; integral的结果要好。
+
+;; Exercise 1.30
+(define (sum-iterative term a next b)
+  (define (iter a result)
+    (if (> a b)
+      result
+      (iter (next a) (+ result (term a)))))
+  (iter a 0))
