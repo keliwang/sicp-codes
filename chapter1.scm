@@ -835,3 +835,25 @@
      dx))
 ;; 下面的语句就是计算x^3在0-1上的积分，取dx=0.001
 (integral cube 0 1 0.001)
+
+;; Exercise 1.29
+(define (simpson-integral f a b n)
+  (define h (/ (- b a) (* n 1.0))) ;; 确保h是一个浮点数
+  (define (y x)
+    (f (+ a (* x h))))
+  (define (simpson-term k)
+    (cond ((or (= k 0) (= k n)) (y k))
+	  ((even? k) (* 2 (y k)))
+	  (else (* 4 (y k)))))
+  (* (/ h 3.0) (sum simpson-term 0 inc n)))
+
+;; (simpson-integral cube 0 1 100)
+;; => 0.24999999999999992
+;; (integral cube 0 1 0.01)
+;; => 0.24998750000000042
+;; (simpson-integral cube 0 1 1000)
+;; => 0.2500000000000003
+;; (integral cube 0 1 0.001)
+;; => 0.249999875000001
+;; 有上面结果可以看出simpson-integral的计算结果要比
+;; integral的结果要好。
