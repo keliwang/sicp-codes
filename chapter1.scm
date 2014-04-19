@@ -947,3 +947,31 @@
   (define (relative-prime-of-n i)
     (= (gcd i n) 1))
   (filtered-accumulate * 1 identity 1 inc (- n 1) relative-prime-of-n))
+
+;; 使用let创建局部变量
+;; f(x, y) = x(1+xy)^2+y(1-y)+(1+xy)(1-y)
+;; 不使用let如何达到构建局部变量的效果：
+;;   即使用一个辅助函数，将局部变量转化为辅助函数的参数，
+;;   这样就可以达到等同与创建局部变量的效果。
+;; (define (f x y)
+;;   (define (f-helper a b)
+;;     (+ (* x (square a))
+;;        (* y b)
+;;        (* a b)))
+;;   (f-helper (+ 1 (* x y))
+;; 	    (- 1 y)))
+;; (define (f x y)
+;;   ((lambda (a b)
+;;      (+ (* x (square a))
+;; 	(* y b)
+;; 	(* a b)))
+;;    (+ 1 (* x y))
+;;    (- 1 y)))
+;; 因为创建局部变量的需求的确非常常见，所以有了let这个
+;; special form来专门用于创建局部变量。
+;; (define (f x y)
+;;   (let ((a (+ 1 (* x y)))
+;; 	(b (- 1 y)))
+;;     (+ (* x (square a))
+;;        (* y b)
+;;        (* a b))))
