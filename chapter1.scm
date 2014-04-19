@@ -1017,3 +1017,19 @@
 	new-guess
 	(try new-guess))))
   (try first-guess))
+
+;; (define (sqrt-with-fixed-point x)
+;;   (fixed-point (lambda (y) (/ x y))
+;; 	       1.0))
+;; 上面的函数无法正常工作，因为它会陷入无限循环
+(define (sqrt-with-fixed-point x)
+  (fixed-point (lambda (y) (average y (/ x y)))
+	       1.0))
+
+;; Exercise 1.35
+;; f(x) = 1+1/x and f(x) = x
+;; => x^2-x-1=0
+;; => x = 1/2(1±√5)
+(define (golden-ratio)
+  (fixed-point (lambda (x) (+ 1 (/ 1 x)))
+	       1.0))
