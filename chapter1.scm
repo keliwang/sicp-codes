@@ -981,3 +981,27 @@
 ;; 执行(f f)会发生什么？
 ;; (f f)会运行出错，因为我们最终把2当成了操作符。
 ;; (f f) -> (f 2) -> (2 2)从而产生错误。
+
+;; 使用half-interval(区间分半)方法来求f(x)=0的根。
+(define (search f neg-point pos-point)
+  (define (close-enough? x y) (< (abs (- x y)) 0.001))
+  (let ((midpoint (average neg-point pos-point)))
+    (if (close-enough? neg-point pos-point)
+      midpoint
+      (let ((test-value (f midpoint)))
+	(cond ((positive? test-value)
+	       (search f neg-point midpoint))
+	      ((negative? test-value)
+	       (search f midpoint pos-point))
+	      (else midpoint))))))
+(define (half-interval-method f a b)
+  (let ((a-value (f a))
+	(b-value (f b)))
+    (cond
+      ((and (positive? a-value) (negative? b-value))
+       (search f b a))
+      ((and (negative? a-value) (positive? b-value))
+       (search f a b))
+      (else
+	(error "Values are not of opposite sign" a b)))))
+(half-interval-method sin 2.0 4.0)
