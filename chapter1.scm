@@ -822,7 +822,7 @@
 
 (define (pi-sum a b)
   (define (pi-term x)
-    (/ 1.0 (* x (+ x 2)))) 
+    (/ 1.0 (* x (+ x 2))))
   (define (pi-next x)
     (+ x 4))
   (sum pi-term a pi-next b))
@@ -1005,3 +1005,15 @@
       (else
 	(error "Values are not of opposite sign" a b)))))
 (half-interval-method sin 2.0 4.0)
+
+;; 求f(x)=x的根的方法，也叫求函数的fixed point
+(define tolerance 0.00001)
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let ((new-guess (f guess)))
+      (if (close-enough? guess new-guess)
+	new-guess
+	(try new-guess))))
+  (try first-guess))
