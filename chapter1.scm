@@ -931,3 +931,19 @@
       (/ (+ x 2.0) (+ x 1.0))
       (/ (+ x 1.0) (+ x 2.0))))
   (* 4 (product-with-accumulate-iterative pi-term 1 inc n)))
+
+;; Exercise 1.33
+(define (filtered-accumulate combiner null-value term a next b predicate)
+  (define (iter n result)
+    (if (> n b)
+      result
+      (if (predicate n)
+	(iter (next n) (combiner result (term n)))
+	(iter (next n) result))))
+  (iter a null-value))
+(define (sum-of-primes a b)
+  (filtered-accumulate + 0 identity a inc b prime?))
+(define (product-of-relative-prime-of n)
+  (define (relative-prime-of-n i)
+    (= (gcd i n) 1))
+  (filtered-accumulate * 1 identity 1 inc (- n 1) relative-prime-of-n))
