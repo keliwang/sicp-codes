@@ -893,3 +893,41 @@
       (/ (+ x 2.0) (+ x 1.0))
       (/ (+ x 1.0) (+ x 2.0))))
   (* 4 (product-iterative pi-term 1 inc n)))
+
+;; Exercise 1.32
+;; 递归实现的accumulate
+(define (accumulate combiner null-value term a next b)
+  (if (> a b)
+    null-value
+    (combiner (term a)
+	      (accumulate combiner null-value term (next a) next b))))
+(define (sum-with-accumulate term a next b)
+  (accumulate + 0 term a next b))
+(define (product-with-accumulate term a next b)
+  (accumulate * 1 term a next b))
+;; 用于测试accumulate的正确性，sum和product几乎一致，
+;; 测试一个就可以确定accumulate的正确性了。
+(define (pi-product-with-accumulate n)
+  (define (pi-term x)
+    (if (even? x)
+      (/ (+ x 2.0) (+ x 1.0))
+      (/ (+ x 1.0) (+ x 2.0))))
+  (* 4 (product-with-accumulate pi-term 1 inc n)))
+
+;; 迭代实现的accumulate
+(define (accumulate-iterative combiner null-value term a next b)
+  (define (iter n result)
+    (if (> n b)
+      result
+      (iter (next n) (combiner result (term n)))))
+  (iter a null-value))
+(define (sum-with-accumulate-iterative term a next b)
+  (accumulate-iterative + 0 term a next b))
+(define (product-with-accumulate-iterative term a next b)
+  (accumulate-iterative * 1 term a next b))
+(define (pi-product-with-accumulate-iterative n)
+  (define (pi-term x)
+    (if (even? x)
+      (/ (+ x 2.0) (+ x 1.0))
+      (/ (+ x 1.0) (+ x 2.0))))
+  (* 4 (product-with-accumulate-iterative pi-term 1 inc n)))
