@@ -865,3 +865,31 @@
       result
       (iter (next a) (+ result (term a)))))
   (iter a 0))
+
+;; Exercise 1.31
+(define (product term a next b)
+  (if (> a b)
+    1
+    (* (term a)
+       (product term (next a) next b))))
+(define (factorial-with-product n)
+  (product identity 1 inc n))
+(define (pi-product n)
+  (define (pi-term x)
+    (if (even? x)
+      (/ (+ x 2.0) (+ x 1.0))
+      (/ (+ x 1.0) (+ x 2.0))))
+  (* 4 (product pi-term 1 inc n)))
+
+(define (product-iterative term a next b)
+  (define (iter n result)
+    (if (> n b)
+      result
+      (iter (next n) (* result (term n)))))
+  (iter a 1))
+(define (pi-product-iterative n)
+  (define (pi-term x)
+    (if (even? x)
+      (/ (+ x 2.0) (+ x 1.0))
+      (/ (+ x 1.0) (+ x 2.0))))
+  (* 4 (product-iterative pi-term 1 inc n)))
