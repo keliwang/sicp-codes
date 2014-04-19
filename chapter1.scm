@@ -1033,3 +1033,23 @@
 (define (golden-ratio)
   (fixed-point (lambda (x) (+ 1 (/ 1 x)))
 	       1.0))
+
+;; Exercise 1.36
+(define (fixed-point-with-output f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let ((new-guess (f guess)))
+      (display new-guess)
+      (newline)
+      (if (close-enough? guess new-guess)
+	new-guess
+	(try new-guess))))
+  (try first-guess))
+;; (define (exercise-136-solution)
+;;   (fixed-point-with-output (lambda (x) (/ (log 1000) (log x)))
+;; 			   2.0))
+;; (define (exercise-136-solution-with-avg-damping)
+;;   (fixed-point-with-output (lambda (x) (average x (/ (log 1000) (log x))))
+;; 			   2.0))
+;; 不使用average damping需要花费36步，使用了average damping只需要花费10步。
