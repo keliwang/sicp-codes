@@ -1179,3 +1179,26 @@
     ((repeated average-damp (floor (log2 n)))
 		(lambda (y) (/ x (expt y (- n 1)))))
     1.0))
+
+;; Exercise 1.46
+(define (iterative-improve good-enough? improve)
+  (define (iter guess)
+    (let ((new-guess (improve guess)))
+      (if (good-enough? guess new-guess)
+	new-guess
+	(iter new-guess))))
+  iter)
+
+(define (sqrt-with-iterative-improve x)
+  (define (good-enough? v1 v2)
+    (< (abs (- v1 v2)) 0.00001))
+  (define (improve guess)
+    (average guess (/ x guess)))
+  ((iterative-improve good-enough? improve) 1.0))
+
+(define (fixed-point-with-iterative-improve f first-guess)
+  (define (good-enough? v1 v2)
+    (< (abs (- v1 v2)) 0.00001))
+  (define (improve guess)
+    (f guess))
+  ((iterative-improve good-enough? improve) first-guess))
