@@ -1053,3 +1053,20 @@
 ;;   (fixed-point-with-output (lambda (x) (average x (/ (log 1000) (log x))))
 ;; 			   2.0))
 ;; 不使用average damping需要花费36步，使用了average damping只需要花费10步。
+
+;; Exercise 1.37
+(define (cont-frac n d k)
+  (define (iter count result)
+    (if (= count 0)
+      result
+      (iter (- count 1)
+	    (/ (n count) (+ (d count) result)))))
+  (iter k 0))
+
+;; 使用递归模式时还是需要使用一个辅助函数
+(define (cont-frac-recursive n d k)
+  (define (helper x)
+    (if (= x k)
+      (/ (n x) (d x))
+      (/ (n x) (+ (d x) (helper (inc x))))))
+  (helper 1))
