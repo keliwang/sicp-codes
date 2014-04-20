@@ -1080,3 +1080,17 @@
 		    (* 2 (/ (+ x 1) 3))))
 		10000)
      2))
+
+;; Exercise 1.39
+(define (tan-cf x k)
+  (define (n i)
+    (if (= i 1)
+      x
+      (square x)))
+  (define (d i)
+    (- (double i) 1))
+  (define (iter i result)
+    (if (= i 0)
+      result
+      (iter (- i 1) (/ (n i) (- (d i) result)))))
+  (iter k 0.0))
