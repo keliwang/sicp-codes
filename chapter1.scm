@@ -1130,3 +1130,8 @@
 (define (sqrt5 x)
   (fixed-point-of-transform
     (lambda (y) (/ x y)) average-damp 1.0))
+
+;; Exercise 1.40
+(define (cubic a b c)
+  (lambda (x)
+    (+ (cube x) (* a (square x)) (* b x) c)))
