@@ -1120,3 +1120,13 @@
 (define (sqrt-with-newtons-method x)
   (newtons-method
     (lambda (y) (- (square y) x)) 1.0))
+
+;; 进一步抽象fixed-point
+(define (fixed-point-of-transform g transform guess)
+  (fixed-point (transform g) guess))
+(define (sqrt4 x)
+  (fixed-point-of-transform
+    (lambda (y) (- (square y) x)) newton-transform 1.0))
+(define (sqrt5 x)
+  (fixed-point-of-transform
+    (lambda (y) (/ x y)) average-damp 1.0))
