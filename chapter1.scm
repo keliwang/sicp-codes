@@ -1105,3 +1105,18 @@
 (define (cube-root-with-avg-damp x)
   (fixed-point (average-damp (lambda (y) (/ x (square y))))
 	       1.0))
+
+;; 牛顿法的实现
+;; 求一个函数的导函数（近似）
+(define (deriv g)
+  (let ((dx 0.00001))
+    (lambda (x) (/ (- (g (+ x dx)) (g x)) dx))))
+;; 牛顿法辅助函数f(x) = x - (g(x)/Dg(x))
+(define (newton-transform g)
+  (lambda (x) (- x (/ (g x) ((deriv g) x)))))
+(define (newtons-method g guess)
+  (fixed-point (newton-transform g) guess))
+
+(define (sqrt-with-newtons-method x)
+  (newtons-method
+    (lambda (y) (- (square y) x)) 1.0))
