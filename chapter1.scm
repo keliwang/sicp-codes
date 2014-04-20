@@ -1094,3 +1094,14 @@
       result
       (iter (- i 1) (/ (n i) (- (d i) result)))))
   (iter k 0.0))
+
+;; 将average damping抽象出来作为单独的函数
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
+
+(define (sqrt-with-avg-damp x)
+  (fixed-point (average-damp (lambda (y) (/ x y)))
+	       1.0))
+(define (cube-root-with-avg-damp x)
+  (fixed-point (average-damp (lambda (y) (/ x (square y))))
+	       1.0))
