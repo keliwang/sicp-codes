@@ -1135,3 +1135,9 @@
 (define (cubic a b c)
   (lambda (x)
     (+ (cube x) (* a (square x)) (* b x) c)))
+
+;; Exercise 1.41
+(define (double-procedure f)
+  (lambda (x) (f (f x))))
+;; (((double-procedure (double-procedure double-procedure)) inc) 5)
+;; => 21
