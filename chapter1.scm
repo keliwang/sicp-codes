@@ -1070,3 +1070,13 @@
       (/ (n x) (d x))
       (/ (n x) (+ (d x) (helper (inc x))))))
   (helper 1))
+
+;; Exercise 1.38
+(define (e)
+  (+ (cont-frac (lambda (x) 1.0)
+		(lambda (x)
+		  (if (= (remainder x 3) 2)
+		    1
+		    (* 2 (/ (+ x 1) 3))))
+		10000)
+     2))
