@@ -1163,3 +1163,19 @@
        3)))
 (define (n-fold-smooth f dx n)
   (repeated (smooth f dx) n))
+
+;; Exercise 1.45
+;; 经过测试，我们可以知道：
+;; 不使用average-damp：处理x^2出现问题
+;; 使用一次average-damp: 处理x^4出现问题
+;; 使用两次average-damp: 处理x^8出现问题
+;; 使用三次average-damp: 处理x^16出现问题
+;; 从上面我们可以推测出，使用n次average-damp，
+;; 处理到x^(2^(n+1))就会出现问题。
+;; 由上面我们可以知道对于求x^n的根，只要
+;; 取(floor (log2 n))次average-damp就可以了。
+(define (nth-root x n)
+  (fixed-point
+    ((repeated average-damp (floor (log2 n)))
+		(lambda (y) (/ x (expt y (- n 1)))))
+    1.0))
