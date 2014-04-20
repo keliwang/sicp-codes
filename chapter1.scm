@@ -1153,3 +1153,13 @@
       g
       (iter (- i 1) (compose f g))))
   (iter n identity))
+
+;; Exercise 1.44
+(define (smooth f dx)
+  (lambda (x)
+    (/ (+ (f x)
+	  (f (+ x dx))
+	  (f (- x dx)))
+       3)))
+(define (n-fold-smooth f n)
+  (repeated (smooth f) n))
