@@ -1141,3 +1141,7 @@
   (lambda (x) (f (f x))))
 ;; (((double-procedure (double-procedure double-procedure)) inc) 5)
 ;; => 21
+
+;; Exercise 1.42
+(define (compose f g)
+  (lambda (x) (f (g x))))
