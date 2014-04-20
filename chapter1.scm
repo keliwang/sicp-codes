@@ -1145,3 +1145,11 @@
 ;; Exercise 1.42
 (define (compose f g)
   (lambda (x) (f (g x))))
+
+;; Exercise 1.43
+(define (repeated f n)
+  (define (iter i g)
+    (if (= i 0)
+      g
+      (iter (- i 1) (compose f g))))
+  (iter n identity))
