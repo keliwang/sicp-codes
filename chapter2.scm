@@ -68,3 +68,23 @@
   (display ",")
   (display (y-point p))
   (display ")"))
+
+;; Exercise 2.3
+(define (rect-perimeter rect)
+  (* (+ (rect-width rect) (rect-height rect)) 2))
+(define (rect-area rect)
+  (* (rect-width rect) (rect-height rect)))
+;; 使用相对的两个点，且假设这个长方形边与对于坐标轴平行
+(define (make-rect a b)
+  (cons a b))
+(define (rect-width rect)
+  (abs (- (x-point (car rect)) (x-point (cdr rect)))))
+(define (rect-height rect)
+  (abs (- (y-point (car rect)) (y-point (cdr rect)))))
+;; 使用一个顶点和长宽值
+(define (make-rect p w h)
+  (cons p (cons w h)))
+(define (rect-width rect)
+  (car (cdr rect)))
+(define (rect-height rect)
+  (cdr (cdr rect)))
