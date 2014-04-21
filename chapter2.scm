@@ -160,3 +160,11 @@
     x
     (make-interval (/ 1.0 (upper-bound y))
 		   (/ 1.0 (lower-bound y)))))
+
+;; Exercise 2.7
+(define (make-interval a b)
+  (cons a b))
+(define (lower-bound interval)
+  (car interval))
+(define (upper-bound interval)
+  (cdr interval))
