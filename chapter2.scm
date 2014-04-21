@@ -94,7 +94,8 @@
   (define (dispatch m)
     (cond ((= m 0) x)
 	  ((= m 1) y)
-	  (else (error "Argument not 0 or 1: CONS" m)))))
+	  (else (error "Argument not 0 or 1: CONS" m))))
+  dispatch)
 (define (my-car1 z)
   (z 0))
 (define (my-cdr1 z)
@@ -107,3 +108,21 @@
   (z (lambda (p q) p)))
 (define (my-cdr2 z)
   (z (lambda (p q) q)))
+
+;; Exercise 2.5
+;; 将(cons x y)用(2^x)*(3^y)来表示，
+;; 求car时，我们可以将cons算得的值不断除去2，
+;; 直到无法整除为止，统计一共进行了多少次除法
+;; 我们就可以获得x的值，同理可以获得y的值。
+(define (num-divs n d)
+  (define (iter count num)
+    (if (= (remainder num d) 0)
+      (iter (+ count 1) (/ num d))
+      count))
+  (iter 0 n))
+(define (my-cons3 x y)
+  (* (expt 2 x) (expt 3 y)))
+(define (my-car3 z)
+  (num-divs z 2))
+(define (my-cdr3 z)
+  (num-divs z 3))
