@@ -128,6 +128,10 @@
   (num-divs z 3))
 
 ;; Exercise 2.6
+;; zero会执行f 0次
+;; one会执行f 1次
+;; two会执行f 2次
+;; 依此类推即可直到这里的用f的可以执行的次数来表示数量
 (define zero (lambda (f) (lambda (x) x)))
 (define (add-1 n)
   (lambda (f) (lambda (x) (f ((n f) x)))))
