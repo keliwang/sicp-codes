@@ -90,12 +90,20 @@
   (cdr (cdr rect)))
 
 ;; 实现cons, car, cdr
-(define (my-cons x y)
+(define (my-cons1 x y)
   (define (dispatch m)
     (cond ((= m 0) x)
 	  ((= m 1) y)
 	  (else (error "Argument not 0 or 1: CONS" m)))))
-(define (my-car z)
+(define (my-car1 z)
   (z 0))
-(define (my-cdr z)
+(define (my-cdr1 z)
   (z 1))
+
+;; Exercise 2.4
+(define (my-cons2 x y)
+  (lambda (m) (m x y)))
+(define (my-car2 z)
+  (z (lambda (p q) p)))
+(define (my-cdr2 z)
+  (z (lambda (p q) q)))
