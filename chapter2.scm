@@ -33,3 +33,10 @@
   (display (denom x)))
 (define one-half (make-rat 1 2))
 (define one-third (make-rat 1 3))
+
+;; Exercise 2.1
+;; 更好的处理正负数
+(define (make-rat n d)
+  (if (negative? d)
+    (cons (- n) (- d))
+    (cons n d)))
