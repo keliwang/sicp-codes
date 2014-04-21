@@ -88,3 +88,14 @@
   (car (cdr rect)))
 (define (rect-height rect)
   (cdr (cdr rect)))
+
+;; 实现cons, car, cdr
+(define (my-cons x y)
+  (define (dispatch m)
+    (cond ((= m 0) x)
+	  ((= m 1) y)
+	  (else (error "Argument not 0 or 1: CONS" m)))))
+(define (my-car z)
+  (z 0))
+(define (my-cdr z)
+  (z 1))
