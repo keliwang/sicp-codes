@@ -260,10 +260,10 @@
 (define (center i)
   (average (lower-bound i) (upper-bound i)))
 (define (width i)
-  (/ (- (upper-bound i) (lower-bound i)) 2))
+  (/ (- (upper-bound i) (lower-bound i)) 2.0))
 
 ;; Exercise 2.12
 (define (make-center-percent c p)
-  (make-center-width c (/ p 100)))
+  (make-center-width c (* c (/ p 100.0))))
 (define (percent i)
-  (* (width i) 100))
+  (* 100.0 (/ (width i) (center i))))
