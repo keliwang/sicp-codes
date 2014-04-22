@@ -174,3 +174,17 @@
 (define (sub-interval x y)
   (make-interval (- (lower-bound x) (upper-bound y))
 		 (- (upper-bound x) (lower-bound y))))
+
+;; Exercise 2.9
+;; 首先我们看看interval arithematic的加法：
+;; [a, b] + [c, d] = [a+c, b+d]
+;; 和的宽度为((b+d) - (a+c))/2 = (b-a)/2 + (d-c)/2
+;; 由上可知和的宽度等于宽度的和。
+;; 乘法和除法不满足的示例：
+;; (define a (make-interval 3 5))
+;; (define a (make-interval 2 9))
+;; (mul-interval a b)
+;; => (6 . 45) 其宽度为39/2，很明显不满足
+;; (div-interval a b)
+;; => (0.33333333333 . 2.5) 其宽度2.166667/2，也不满足
+;; 由上知，乘法和除法并不满足。
