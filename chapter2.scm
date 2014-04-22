@@ -261,3 +261,9 @@
   (average (lower-bound i) (upper-bound i)))
 (define (width i)
   (/ (- (upper-bound i) (lower-bound i)) 2))
+
+;; Exercise 2.12
+(define (make-center-percent c p)
+  (make-center-width c (/ p 100)))
+(define (percent i)
+  (* (width i) 100))
