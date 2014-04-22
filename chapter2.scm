@@ -94,7 +94,7 @@
   (define (dispatch m)
     (cond ((= m 0) x)
 	  ((= m 1) y)
-	  (else (error "Argument not 0 or 1: CONS" m))))
+	  (else (error "mycons1" "Argument not 0 or 1: CONS" m))))
   dispatch)
 (define (my-car1 z)
   (z 0))
@@ -188,3 +188,14 @@
 ;; (div-interval a b)
 ;; => (0.33333333333 . 2.5) 其宽度2.166667/2，也不满足
 ;; 由上知，乘法和除法并不满足。
+
+;; Exercise 2.10
+(define (div-interval-with-zero-check x y)
+  (let ((upper (upper-bound y))
+	(lower (lower-bound y)))
+    (if (or (= upper 0) (= lower 0))
+      (error "div-interval-with-zero-check" "lower bound and upper bound both cannot be 0" lower upper)
+      (mul-interval
+	x
+	(make-interval (/ 1.0 (upper-bound y))
+		       (/ 1.0 (lower-bound y)))))))
