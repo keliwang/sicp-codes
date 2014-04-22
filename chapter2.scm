@@ -267,3 +267,13 @@
   (make-center-width c (* c (/ p 100.0))))
 (define (percent i)
   (* 100.0 (/ (width i) (center i))))
+
+;; Exercise 2.13
+;; 假设使用中间值和容忍度表示的interval的lower bound都是正值
+;; 假设现有两组interval: [a-ap, a+ap], [b-bq, b+bq]
+;; [a-ap, a+ap]*[b-bq, b+bq] = [ab-abq-abp+abpq, ab+abq+abp+abpq]
+;; 因而其宽度为[(ab+abq+abp+abpq)-(ab-abq-abp+abqp)]/2 = ab(p+q)
+;; 其center为：ab(1+pq)
+;; 我们可以得出乘积的容忍度为：(p+q)/(1+pq)。
+;; 因为p和q都是非常小的值，所以1+pq可以近似看作1，
+;; 所以两个interval乘积的容忍度可以用p+q近似表示。
