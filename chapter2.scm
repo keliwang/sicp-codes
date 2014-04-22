@@ -277,3 +277,51 @@
 ;; 我们可以得出乘积的容忍度为：(p+q)/(1+pq)。
 ;; 因为p和q都是非常小的值，所以1+pq可以近似看作1，
 ;; 所以两个interval乘积的容忍度可以用p+q近似表示。
+
+(define (par1 r1 r2)
+  (div-interval (mul-interval r1 r2)
+		(add-interval r1 r2)))
+(define (par2 r1 r2)
+  (let ((one (make-interval 1 1)))
+    (div-interval
+      one
+      (add-interval (div-interval one r1)
+		    (div-interval one r2)))))
+
+;; Exercise 2.14
+;; Lem是对的，我们可以随意测试一下，结果如下
+;; (define a (make-center-percent 5 0.8))
+;; (par1 a a)
+;; => (2.4406349206349205 . 2.560645161290323)
+;; (par2 a a)
+;; => (2.48 . 2.52)
+
+;; 我们继续测试两组数据
+;; (define a (make-center-percent 100 0.001))
+;; (define b (make-center-percent 200 0.002))
+;; (define aa (div-interval a a))
+;; (define ab (div-interval a b))
+;; (center aa)
+;; => 1.0000000002
+;; (percent aa)
+;; => 0.001999999999812942
+;; (center ab)
+;; => 0.5000000003
+;; (percent ab)
+;; => 0.002999999999402041
+
+;; (define a (make-center-percent 100 40))
+;; (define b (make-center-percent 200 50))
+;; (define aa (div-interval a a))
+;; (define ab (div-interval a b))
+;; (center aa)
+;; => 1.380952380952381
+;; (percent aa)
+;; => 68.96551724137932
+;; (center ab)
+;; => 0.8
+;; (percent ab)
+;; => 75.00000000000001
+;; 从上面两组数据我们可以看到(center a/a)的结果并不是1，
+;; 这就明显的说明了我们的计算存在误差，而且percent越大，
+;; 误差也越大。
