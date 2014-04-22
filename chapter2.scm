@@ -253,3 +253,11 @@
 	      (= (classify-interval y) 3))
 	 (make-interval (* (lower-bound x) (lower-bound y))
 			(* (upper-bound x) (upper-bound y))))))
+
+;; 使用中间值和容忍度来表示interval
+(define (make-center-width c w)
+  (make-interval (- c w) (+ c w)))
+(define (center i)
+  (average (lower-bound i) (upper-bound i)))
+(define (width i)
+  (/ (- (upper-bound i) (lower-bound i)) 2))
