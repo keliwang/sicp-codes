@@ -199,3 +199,57 @@
 	x
 	(make-interval (/ 1.0 (upper-bound y))
 		       (/ 1.0 (lower-bound y)))))))
+
+;; Exercise 2.11
+;; 一个interval的符号只有以下三种情况：[+, +], [-, +], [-, -]
+;; 所以两个interval的符号组合至多有3*3=9种。
+;; 经过分析，其中只有[-, +], [-, +]这一对必须进行4次乘法运算。
+;; 下面的函数里会将0分到+类中
+(define (mul-interval x y)
+  (define (classify-interval interval)
+    (cond ((and (negative? (lower-bound interval))
+		(negative? (upper-bound interval)))
+	   1) ; [-, -]
+	  ((negative? (lower-bound interval))
+	   2) ; [-, +]
+	  (else 3))) ; [+, +]
+  (cond ((and (= (classify-interval x) 1)
+	      (= (classify-interval y) 1))
+	 (make-interval (* (upper-bound x) (upper-bound y))
+			(* (lower-bound x) (lower-bound y))))
+	((and (= (classify-interval x) 1)
+	      (= (classify-interval y) 2))
+	 (make-interval (* (lower-bound x) (upper-bound y))
+			(* (lower-bound x) (lower-bound y))))
+	((and (= (classify-interval x) 1)
+	      (= (classify-interval y) 3))
+	 (make-interval (* (lower-bound x) (upper-bound y))
+			(* (upper-bound x) (lower-bound y))))
+	((and (= (classify-interval x) 2)
+	      (= (classify-interval y) 1))
+	 (make-interval (* (upper-bound x) (lower-bound y))
+			(* (lower-bound x) (lower-bound y))))
+	((and (= (classify-interval x) 2)
+	      (= (classify-interval y) 2))
+	 (let ((p1 (* (lower-bound x) (lower-bound y)))
+	       (p2 (* (lower-bound x) (upper-bound y)))
+	       (p3 (* (upper-bound x) (lower-bound y)))
+	       (p4 (* (upper-bound x) (upper-bound y))))
+	   (make-interval (min p1 p2 p3 p4)
+			  (max p1 p2 p3 p4))))
+	((and (= (classify-interval x) 2)
+	      (= (classify-interval y) 3))
+	 (make-interval (* (lower-bound x) (upper-bound y))
+			(* (upper-bound x) (upper-bound y))))
+	((and (= (classify-interval x) 3)
+	      (= (classify-interval y) 1))
+	 (make-interval (* (upper-bound x) (lower-bound y))
+			(* (lower-bound x) (upper-bound y))))
+	((and (= (classify-interval x) 3)
+	      (= (classify-interval y) 2))
+	 (make-interval (* (upper-bound x) (lower-bound y))
+			(* (upper-bound x) (upper-bound y))))
+	((and (= (classify-interval x) 3)
+	      (= (classify-interval y) 3))
+	 (make-interval (* (lower-bound x) (lower-bound y))
+			(* (upper-bound x) (upper-bound y))))))
