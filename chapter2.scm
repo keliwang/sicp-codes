@@ -337,3 +337,10 @@
 ;; 计算的R1/R1的结果是有偏差的，所以par1和par2的计算结果才会出现差别。
 ;; 从上面的分析可以知道，我们应该使用par2，因为它避免了对R1/R1，R2/R2的隐式计算，
 ;; 它的结果应当更为准确。
+
+;; Exercise 2.16
+;; 简而言之，两个数学上相等的公式在计算机上计算出的结果不同
+;; 是因为它们在计算机上的计算过程并不是完全等价的，其中存在着
+;; 一定的误差。
+;; 关于Interval Arithematic的这个问题，可以阅读：
+;; http://en.wikipedia.org/wiki/Interval_arithmetic#Dependency_problem
