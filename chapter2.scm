@@ -516,3 +516,15 @@
 ;; => ((1 2 3) 4 5 6)
 ;; (list x y)
 ;; => ((1 2 3) (4 5 6))
+
+;; Exercise 2.27
+(define (list-without-sublists? lst)
+  (cond ((null? lst) #t)
+	((pair? (car lst)) #f)
+	(else
+	  (list-without-sublists? (cdr lst)))))
+(define (deep-reverse lst)
+  (cond ((list-without-sublists? lst) (reverse lst))
+	((not (pair? lst)) lst)
+	(else
+	  (reverse (map deep-reverse lst)))))
