@@ -344,3 +344,23 @@
 ;; 一定的误差。
 ;; 关于Interval Arithematic的这个问题，可以阅读：
 ;; http://en.wikipedia.org/wiki/Interval_arithmetic#Dependency_problem
+
+;; 一些对list的操作
+(define (list-ref items n)
+  (if (= n 0)
+    (car items)
+    (list-ref (cdr items) (- n 1))))
+(define (length lst)
+  (if (null? lst)
+    0
+    (+ 1 (length (cdr lst)))))
+(define (length lst)
+  (define (iter count l)
+    (if (null? l)
+      count
+      (iter (+ count 1) (cdr l))))
+  (iter 0 lst))
+(define (append list1 list2)
+  (if (null? list1)
+    list2
+    (cons (car list1) (append (cdr list1) list2))))
