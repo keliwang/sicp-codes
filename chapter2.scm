@@ -376,3 +376,9 @@
       (cons a d)
       (helper (car d) (cdr d))))
   (helper (car items) (cdr items)))
+
+;; Exercise 2.18
+(define (reverse-list items)
+  (if (null? items)
+    items
+    (append (reverse-list (cdr items)) (list (car items)))))
