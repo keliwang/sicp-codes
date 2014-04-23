@@ -429,6 +429,9 @@
     (cons (* (car items) factor)
 	  (scale-list (cdr items)
 		      factor))))
+;; map的重要意义在于它可以帮助我们隐藏list
+;; 中元素层面的相关操作，为我们提供了直接
+;; 对整个list的操作。
 (define (map1 proc items)
   (if (null? items)
     nil
@@ -437,3 +440,15 @@
 (define (scale-list items factor)
   (map (lambda (x) (* factor x))
        items))
+
+;; Exercise 2.21
+(define (square x)
+  (* x x))
+(define (square-list items)
+  (if (null? items)
+    nil
+    (cons (square (car items))
+	  (square-list (cdr items)))))
+(define (square-list items)
+  (map1 (lambda (x) (square x))
+	items))
