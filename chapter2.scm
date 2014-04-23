@@ -406,3 +406,17 @@
 ;; cc将兑换方法分为两类：一定使用第一种的和一定不使用第一种的，
 ;; 然后不停地递归计算。这种方法会将硬币的每一种面值都按照这种方法
 ;; 来考虑一遍，不会有任何遗漏。所以硬币的顺序并不会造成影响。
+
+;; Exercise 2.20
+(define (same-parity first . subs)
+  (define (helper head tails pred)
+    (cond ((and (null? tails) (pred head))
+	   (cons head tails))
+	  ((null? tails)
+	   tails)
+	  ((pred head)
+	   (cons head (helper (car tails) (cdr tails) pred)))
+	  (else
+	    (helper (car tails) (cdr tails) pred))))
+  (let ((pred (if (even? first) even? odd?)))
+    (cons first (helper (car subs) (cdr subs) pred))))
