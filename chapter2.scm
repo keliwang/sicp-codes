@@ -420,3 +420,20 @@
 	    (helper (car tails) (cdr tails) pred))))
   (let ((pred (if (even? first) even? odd?)))
     (cons first (helper (car subs) (cdr subs) pred))))
+
+;; map操作
+(define nil '())
+(define (scale-list items factor)
+  (if (null? items)
+    nil
+    (cons (* (car items) factor)
+	  (scale-list (cdr items)
+		      factor))))
+(define (map1 proc items)
+  (if (null? items)
+    nil
+    (cons (proc (car items))
+	  (map1 proc (cdr items)))))
+(define (scale-list items factor)
+  (map (lambda (x) (* factor x))
+       items))
