@@ -493,3 +493,8 @@
 	((not (pair? x)) 1)
 	(else (+ (count-leaves (car x))
 		 (count-leaves (cdr x))))))
+
+;; Exercise 2.24
+;; (list 1 (list 2 (list 3 4)))
+;; 解释器的输出：(1 (2 (3 4)))
+;; box-and-pointer图及树形图省略。
