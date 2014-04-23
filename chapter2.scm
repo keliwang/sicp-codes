@@ -528,3 +528,18 @@
 	((not (pair? lst)) lst)
 	(else
 	  (reverse (map deep-reverse lst)))))
+
+;; Exercise 2.28
+(define (fringe tree)
+  (define (helper head tails)
+    (cond ((and (null? tails) (not (pair? head)))
+	   (cons head nil))
+	  ((null? tails)
+	   (helper (car head) (cdr head)))
+	  ((not (pair? head))
+	   (append (cons head nil)
+		   (helper (car tails) (cdr tails))))
+	  (else
+	    (append (helper (car head) (cdr head))
+		    (helper (car tails) (cdr tails))))))
+  (helper (car tree) (cdr tree)))
