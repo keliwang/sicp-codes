@@ -364,3 +364,15 @@
   (if (null? list1)
     list2
     (cons (car list1) (append (cdr list1) list2))))
+
+;; Exercise 2.17
+(define (last-pair items)
+  (if (= (length items) 1)
+    items
+    (last-pair (cdr items))))
+(define (last-pair items)
+  (define (helper a d)
+    (if (null? d)
+      (cons a d)
+      (helper (car d) (cdr d))))
+  (helper (car items) (cdr items)))
