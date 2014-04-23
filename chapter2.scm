@@ -382,3 +382,27 @@
   (if (null? items)
     items
     (append (reverse-list (cdr items)) (list (car items)))))
+
+;; Exercise 2.19
+(define us-coins (list 50 25 10 5 1))
+(define uk-coins (list 100 50 20 10 5 2 1 0.5))
+(define (cc amount coin-values)
+  (define (first-denomination items)
+    (car items))
+  (define (except-first-denomination items)
+    (cdr items))
+  (define (no-more? items)
+    (null? items))
+  (cond ((= amount 0) 1)
+	((or (< amount 0) (no-more? coin-values)) 0)
+	(else
+	  (+ (cc amount
+		 (except-first-denomination
+		   coin-values))
+	     (cc (- amount
+		    (first-denomination coin-values))
+		 coin-values)))))
+;; 硬币面值的顺序并不会影响cc的结果。
+;; cc将兑换方法分为两类：一定使用第一种的和一定不使用第一种的，
+;; 然后不停地递归计算。这种方法会将硬币的每一种面值都按照这种方法
+;; 来考虑一遍，不会有任何遗漏。所以硬币的顺序并不会造成影响。
