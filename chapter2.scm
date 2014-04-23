@@ -452,3 +452,29 @@
 (define (square-list items)
   (map1 (lambda (x) (square x))
 	items))
+
+;; Exercise 2.22
+;; (define (square-list items)
+;;   (define (iter things answer)
+;;     (if (null? things)
+;;       answer
+;;       (iter (cdr things)
+;; 	    (cons (square (car things))
+;; 		  answer))))
+;;   (iter items nil))
+;; 上面的程序会逆序输出结果是因为
+;; (cons (square (car things)) answer)每次都会把当前计算出的值加入到
+;; 列表的最前方。如果我们的输入是(1 2 3 4)，那么我们得到的
+;; 结果将是(16 9 4 1)，最先处理的1其后在list的最好，而最后处理的4
+;; 则放到了list的最前面。
+;; (define (square-list items)
+;;   (define (iter things answer)
+;;     (if (null? things)
+;;       answer
+;;       (iter (cdr things)
+;; 	    (cons answer
+;; 		  (square (car things))))))
+;;   (iter items nil))
+;; 上面的程序无法正常工作是因为
+;; (cons answer (square (car things)))将单个的元素放到了后面，这样
+;; 我们得到的就不是合法的list了，而是层层包裹住的cons。
