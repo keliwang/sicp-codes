@@ -432,11 +432,11 @@
 ;; map的重要意义在于它可以帮助我们隐藏list
 ;; 中元素层面的相关操作，为我们提供了直接
 ;; 对整个list的操作。
-(define (map1 proc items)
+(define (my-map proc items)
   (if (null? items)
     nil
     (cons (proc (car items))
-	  (map1 proc (cdr items)))))
+	  (my-map proc (cdr items)))))
 (define (scale-list items factor)
   (map (lambda (x) (* factor x))
        items))
@@ -450,7 +450,7 @@
     (cons (square (car items))
 	  (square-list (cdr items)))))
 (define (square-list items)
-  (map1 (lambda (x) (square x))
+  (my-map (lambda (x) (square x))
 	items))
 
 ;; Exercise 2.22
@@ -478,3 +478,11 @@
 ;; 上面的程序无法正常工作是因为
 ;; (cons answer (square (car things)))将单个的元素放到了后面，这样
 ;; 我们得到的就不是合法的list了，而是层层包裹住的cons。
+
+;; Exercise 2.23
+(define (my-for-each proc items)
+  (cond ((null? items)
+	 #t)
+	(else
+	  (proc (car items))
+	  (my-for-each proc (cdr items)))))
