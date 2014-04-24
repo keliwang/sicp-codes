@@ -598,3 +598,16 @@
 ;; 如果我们将make-mobile和make-branch改为上面的形式，我们只要
 ;; 将mobile和branch的相关selectors也做出相应修改就可以保证
 ;; 其它的部分都可以正常工作。
+
+;; 遍历一棵树
+(define (scale-tree tree factor)
+  (cond ((null? tree) nil)
+	((not (pair? tree)) (* tree factor))
+	(else (cons (scale-tree (car tree) factor)
+		    (scale-tree (cdr tree) factor)))))
+(define (scale-tree tree factor)
+  (map (lambda (sub-tree)
+	 (if (pair? sub-tree)
+	   (scale-tree sub-tree factor)
+	   (* sub-tree factor)))
+       tree))
