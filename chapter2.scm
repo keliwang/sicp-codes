@@ -635,3 +635,17 @@
        tree))
 (define (square-tree tree)
   (tree-map square tree))
+
+;; Exercise 2.32
+(define (subsets s)
+  (if (null? s)
+    (list nil)
+    (let ((rest (subsets (cdr s))))
+      (append rest
+	      (map (lambda (x)
+		     (cons (car s) x)) rest)))))
+;; From Wikipedia, http://en.wikipedia.org/wiki/Powerset#Algorithms
+;; the power set of the empty set is the set containing the empty set
+;; and the power set of any other set is all the subsets of the set
+;; containing some specific element and all the subsets of the set not
+;; containing that specific element.
