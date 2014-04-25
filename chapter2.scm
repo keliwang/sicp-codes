@@ -725,3 +725,8 @@
   (accumulate (lambda (this-coeff higher-terms) (+ (* higher-terms x) this-coeff))
 	      0
 	      coefficient-sequence))
+
+;; Exercise 2.35
+;; 用map将每个叶子都当成1，然后使用accumulate累加
+(define (count-leaves t)
+  (accumulate + 0 (map (lambda (x) 1) (enumerate-tree t))))
