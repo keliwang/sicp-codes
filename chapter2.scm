@@ -730,3 +730,10 @@
 ;; 用map将每个叶子都当成1，然后使用accumulate累加
 (define (count-leaves t)
   (accumulate + 0 (map (lambda (x) 1) (enumerate-tree t))))
+
+;; Exercise 2.36
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+    nil
+    (cons (accumulate op init (map car seqs))
+	  (accumulate-n op init (map cdr seqs)))))
