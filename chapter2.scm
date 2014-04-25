@@ -761,3 +761,9 @@
   (iter initial sequence))
 ;; 如果op满足交换律，那么fold-left和fold-right的值一定一致。
 ;; A op B = B op A
+
+;; Exercise 2.39
+(define (my-reverse1 sequence)
+  (fold-right (lambda (x y) (append y (list x))) nil sequence))
+(define (my-reverse2 sequence)
+  (fold-left (lambda (x y) (cons y x)) nil sequence))
