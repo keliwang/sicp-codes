@@ -711,3 +711,11 @@
   (accumulate *
 	      1
 	      (map square (my-filter odd? sequence))))
+
+;; Exercise 2.33
+(define (my-map p sequence)
+  (accumulate (lambda (x y) (cons (p x) y)) nil sequence))
+(define (my-append seq1 seq2)
+  (accumulate cons seq2 seq1))
+(define (my-length sequence)
+  (accumulate (lambda (x y) (+ 1 y)) 0 sequence))
