@@ -749,3 +749,15 @@
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
     (map (lambda (x) (matrix-*-vector cols x)) m)))
+
+;; Exercise 2.38
+;; accumulate也叫fold-right
+(define (my-fold-left op initial sequence)
+  (define (iter result rest)
+    (if (null? rest)
+      result
+      (iter (op result (car rest))
+	    (cdr rest))))
+  (iter initial sequence))
+;; 如果op满足交换律，那么fold-left和fold-right的值一定一致。
+;; A op B = B op A
