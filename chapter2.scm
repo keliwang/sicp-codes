@@ -885,3 +885,27 @@
 ;; n次，每次计算(queens-cols (- n 1))又需要计算(queens-cols (- n 2))n次，依此类推，我们需要计算
 ;; n^n次。
 ;; 也就是说这种调换将原先的线性递归变成了现在的树形递归。所以现在的时间复杂度变为了T^board-size。
+
+;; The Picture Language
+(define (flipped-pairs painter)
+  (let ((painter2 (beside painter (flip-vert painter))))
+    (below painter2 painter2)))
+(define (right-split painter n)
+  (if (= n 0)
+    painter
+    (let ((smaller (right-split painter (- n 1))))
+      (beside painter (below smaller smaller)))))
+(define (corner-split painter n)
+  (if (= n 0)
+    painter
+    (let ((up (up-split painter (- n 1)))
+	  (right (right-split painter (- n 1))))
+      (let ((top-left (beside up up))
+	    (bottom-right (below right right))
+	    (corner (corner-split painter (- n 1))))
+	(beside (below painter top-left)
+		(below bottom-right corner))))))
+(define (square-limit painter n)
+  (let ((quarter (corner-split painter n)))
+    (let ((half (beside (flip-horiz quarter) quarter)))
+      (below (flip-vert half) half))))
