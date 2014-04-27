@@ -831,3 +831,42 @@
     (= (accumulate + 0 pair) s))
   (filter sum-is-s?
 	  (unique-triples n)))
+
+;; Exercise 2.42
+(define (make-position row col)
+  (cons row col))
+(define (position-row p)
+  (car p))
+(define (position-col p)
+  (cdr p))
+(define empty-board nil)
+(define (adjoin-position new-row col rest)
+  (append rest (list (make-position new-row col))))
+(define (safe? col positions)
+  (define (attack? exist-pos new-pos)
+    (cond ((= (position-row exist-pos) (position-row new-pos)) #t)
+	  ((= (abs (- (position-row exist-pos) (position-row new-pos)))
+	      (abs (- (position-col exist-pos) (position-col new-pos))))
+	   #t)
+	  (else #f)))
+  (define (check-new-pos exist-pos-count new-pos)
+    (cond ((= exist-pos-count 0) #t)
+	  ((attack? (list-ref positions (- exist-pos-count 1)) new-pos) #f)
+	  (else
+	    (check-new-pos (- exist-pos-count 1) new-pos))))
+  (let ((nth-queen (list-ref positions (- col 1))))
+    (check-new-pos (- col 1) nth-queen)))
+(define (queens board-size)
+  (define (queens-cols k)
+    (if (= k 0)
+      (list empty-board)
+      (filter
+	(lambda (positions) (safe? k positions))
+	(flatmap
+	  (lambda (rest-of-queens)
+	    (map (lambda (new-row)
+		   (adjoin-position
+		     new-row k rest-of-queens))
+		 (enumerate-interval 1 board-size)))
+	  (queens-cols (- k 1))))))
+  (queens-cols board-size))
