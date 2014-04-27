@@ -909,3 +909,10 @@
   (let ((quarter (corner-split painter n)))
     (let ((half (beside (flip-horiz quarter) quarter)))
       (below (flip-vert half) half))))
+
+;; Exercise 2.44
+(define (up-split painter n)
+  (let ((smaller (up-split (- n 1))))
+    (if (= n 0)
+      painter
+      (below painter (beside smaller smaller)))))
