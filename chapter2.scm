@@ -870,3 +870,18 @@
 		 (enumerate-interval 1 board-size)))
 	  (queens-cols (- k 1))))))
   (queens-cols board-size))
+
+;; Exercise 2.43
+;; (flatmap (lambda (new-row)
+;; 	   (map (lambda (rest-of-queens)
+;; 		  (adjoin-position new-row k rest-of-queens))
+;; 		(queens-cols (- k 1))))
+;; 	 (enumerate-interval 1 board-size))
+;; 改成上面的写法我们就要重复很多次queens-cols计算了。
+;; 当queens-cols位于外围时，执行(queens n)时一共只需要计算queens-cols
+;; (n+1)次，它们分别是(queens-cols n) (queens-cols (- n 1)) ... (queens-cols 0)。
+;; 但是当queens-cols被放在内部时，我们每次都要重复对同一个参数计算多次queens-cols，
+;; 这时我们执行(queens n)是需要计算queens-cols n^n次，因为我们首先需要计算(queens-cols (- n 1))
+;; n次，每次计算(queens-cols (- n 1))又需要计算(queens-cols (- n 2))n次，依此类推，我们需要计算
+;; n^n次。
+;; 也就是说这种调换将原先的线性递归变成了现在的树形递归。所以现在的时间复杂度变为了T^board-size。
