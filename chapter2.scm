@@ -933,3 +933,14 @@
     (combine4 (corner-split painter n))))
 (define rotate180
   (compose flip-vert flip-horiz))
+
+;; Exercise 2.45
+(define (split combine-main combine-branchs)
+  (define (split-helper painter n)
+    (let ((smaller (split-helper painter (- n 1))))
+      (if (= n 0)
+	painter
+	(combine-main painter (combine-branchs smaller smaller)))))
+  split-helper)
+(define right-split (split beside below))
+(define up-split (split below beside))
