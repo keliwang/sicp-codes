@@ -992,3 +992,15 @@
   (cadr frame))
 (define (edge2-frame frame)
   (cddr frame))
+
+;; painters简单实现
+(define (segments->painter segment-list)
+  (lambda (frame)
+    (for-each
+      (lambda (segment)
+	(draw-line
+	  ((frame-coord-map frame)
+	   (start-segment segment))
+	  ((frame-coord-map frame)
+	   (end-segment segment))))
+      segment-list)))
