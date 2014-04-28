@@ -1012,3 +1012,29 @@
   (car segment))
 (define (end-segment segment)
   (cdr segment))
+
+;; Exercise 2.49
+;; 绘制frame的轮廓
+(define (frame-outline-painter frame)
+  ((segments->painter
+     (list (make-segment (make-vect 0 0) (make-vect 0 1))
+	   (make-segment (make-vect 0 0) (make-vect 1 0))
+	   (make-segment (make-vect 1 1) (make-vect 0 1))
+	   (make-segment (make-vect 1 1) (make-vect 1 0))))
+   frame))
+;; 连接frame的对角线
+(define (frame-diagonal-line-painter frame)
+  ((segments->painter
+     (list (make-segment (make-vect 0 0) (make-vect 1 1))
+	   (make-segment (make-vect 0 1) (make-vect 1 0))))
+   frame))
+;; 绘制一个钻石形
+(define (diamond-painter frame)
+  ((segments->painter
+     (list (make-segment (make-vect 0 0.5) (make-vect 0.5 1))
+	   (make-segment (make-vect 0.5 1) (make-vect 1 0.5))
+	   (make-segment (make-vect 1 0.5) (make-vect 0.5 0))
+	   (make-segment (make-vect 0.5 0) (make-vect 0 0.5))))
+   frame))
+;; 绘制wave
+;; 略
