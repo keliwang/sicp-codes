@@ -944,3 +944,11 @@
   split-helper)
 (define right-split (split beside below))
 (define up-split (split below beside))
+
+;; frame的一些操作
+(define (frame-coord-map frame)
+  (lambda (v)
+    (add-vect
+      (origin-frame frame)
+      (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
+		(scale-vect (ycor-vect v) (edge2-frame frame))))))
