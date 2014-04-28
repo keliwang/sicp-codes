@@ -931,6 +931,9 @@
   (let ((combine4 (square-of-four flip-horiz identity
 				  rotate180  flip-vert)))
     (combine4 (corner-split painter n))))
+(define (compose f g)
+  (lambda (x)
+    (f (g x))))
 (define rotate180
   (compose flip-vert flip-horiz))
 
@@ -969,3 +972,23 @@
 (define (scale-vect n v)
   (make-vect (* n (xcor-vect v))
 	     (* n (ycor-vect v))))
+
+;; Exercise 2.47
+;; 实现1
+(define (make-frame origin edge1 edge2)
+  (list origin edge1 edge2))
+(define (origin-frame frame)
+  (list-ref frame 0))
+(define (edge1-frame frame)
+  (list-ref frame 1))
+(define (edge2-frame frame)
+  (list-ref frame 2))
+;; 实现2
+(define (make-frame origin edge1 edge2)
+  (cons origin (cons edge1 edge2)))
+(define (origin-frame frame)
+  (car frame))
+(define (edge1-frame frame)
+  (cadr frame))
+(define (edge2-frame frame)
+  (cddr frame))
