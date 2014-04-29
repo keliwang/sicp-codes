@@ -1128,4 +1128,8 @@
 ;; Exercise 2.52
 ;; 暂略
 
-
+;; symbols
+(define (my-memq item x)
+  (cond ((null? x) #f)
+	((eq? item (car x)) x)
+	(else (my-memq item (cdr x)))))
