@@ -1249,3 +1249,14 @@
 			(deriv (base exp) var))))
 	(else
 	 (error "deriv" "unknown expression type" exp))))
+
+;; Exercise 2.57
+(define (augend s)
+  (if (null? (cdddr s))
+      (caddr s)
+      (cons '+ (cddr s))))
+
+(define (multiplicand p)
+  (if (null? (cdddr p))
+      (caddr p)
+      (cons '* (cddr p))))
