@@ -887,6 +887,16 @@
 ;; 也就是说这种调换将原先的线性递归变成了现在的树形递归。所以现在的时间复杂度变为了T^board-size。
 
 ;; The Picture Language
+;; 仅作为占位符
+(define (flip-vert painter)
+  painter)
+(define (flip-horiz painter)
+  painter)
+(define (beside p1 p2)
+  p1)
+(define (below p1 p2)
+  p1)
+
 (define (flipped-pairs painter)
   (let ((painter2 (beside painter (flip-vert painter))))
     (below painter2 painter2)))
@@ -1076,14 +1086,14 @@
 			       (make-vect 0.0 0.0)
 			       split-point
 			       (make-vect 0.0 1.0)))
-	  ((paint-right
-	     (transform-painter painter2
-				split-point
-				(make-vect 1.0 0.0)
-				(make-vect 0.5 1.0))))
-	  (lambda (frame)
-	    (paint-left frame)
-	    (paint-right frame))))))
+	  (paint-right
+	    (transform-painter painter2
+			       split-point
+			       (make-vect 1.0 0.0)
+			       (make-vect 0.5 1.0))))
+      (lambda (frame)
+	(paint-left frame)
+	(paint-right frame)))))
 
 ;; Exercise 2.50
 (define (flip-horiz painter)
@@ -1100,17 +1110,22 @@
 (define (below painter1 painter2)
   (let ((split-point (make-vect 0.0 0.5)))
     (let ((paint-top
-	    (transform-painter painter2)
-	    split-point
-	    (make-vect 1.0 0.5)
-	    (make-vect 0.0 1.0))
+	    (transform-painter painter2
+			       split-point
+			       (make-vect 1.0 0.5)
+			       (make-vect 0.0 1.0)))
 	  (paint-bottom
-	    (transform-painter painter1)
-	    (make-vect 0.0 0.0)
-	    (make-vect 1.0 0)
-	    split-point))
+	    (transform-painter painter1
+			       (make-vect 0.0 0.0)
+			       (make-vect 1.0 0)
+			       split-point)))
       (lambda (frame)
 	(paint-top frame)
 	(paint-bottom frame)))))
 (define (below painter1 painter2)
   (rotate90 (beside painter1 painter2)))
+
+;; Exercise 2.52
+;; 暂略
+
+
