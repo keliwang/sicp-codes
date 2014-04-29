@@ -1156,3 +1156,11 @@
 	 (my-equal? (cdr list1) (cdr list2)))
 	(else
 	  #f)))
+
+;; Exercise 2.55
+(car ''abracadabra)
+;; (car ''abracadabra)
+;; 在解释器中会被表示为
+;; (car (quote (quote abracadabra)))
+;; 即(car '(quote abracadabra))，
+;; 因而它的结果是quote
