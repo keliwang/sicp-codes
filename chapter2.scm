@@ -1525,3 +1525,11 @@
    (common-elements
     (tree->list-2 set1)
     (tree->list-2 set2))))
+
+;; sets and information retrieval
+(define (lookup given-key set-of-records)
+  (cond ((null? set-of-records) #f)
+	((equal? given-key (key (car set-of-records)))
+	 (car set-of-records))
+	(else
+	 (lookup given-key (cdr set-of-records)))))
