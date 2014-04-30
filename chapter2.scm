@@ -1414,3 +1414,50 @@
 	 (make-tree (entry set)
 		    (left-branch set)
 		    (adjoin-set x (right-branch set))))))
+
+
+;; Exercise 2.63
+(define (tree->list-1 tree)
+  (if (null? tree)
+      '()
+      (append (tree->list-1 (left-branch tree))
+	      (cons (entry tree)
+		    (tree->list-1
+		     (right-branch tree))))))
+(define (tree->list-2 tree)
+  (define (copy-to-list tree result-list)
+    (if (null? tree)
+	result-list
+	(copy-to-list (left-branch tree)
+		      (cons (entry tree)
+			    (copy-to-list
+			     (right-branch tree)
+			     result-list)))))
+  (copy-to-list tree '()))
+;; 上面的两个函数对每棵树产生的结果都相同，因为
+;; 上面两个函数是同一个算法（中序遍历）的两种不同表达，
+;; 递归形式表达和迭代形式表达。
+;; (tree->list-1 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
+;; => (1 3 5 7 9 11)
+;; (tree->list-2 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
+;; => (1 3 5 7 9 11)
+;; (tree->list-1 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
+)
+;; => (1 3 5 7 9 11)
+;; (tree->list-2 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
+)
+;; => (1 3 5 7 9 11)
+;; (tree->list-1 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
+)
+;; => (1 3 5 7 9 11)
+;; (tree->list-2 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
+)
+;; => (1 3 5 7 9 11)
+
+;; 这两个算法都会访问树的每一个节点，但是其中也会有些不同。
+;; 第二个算法每一步都会调用cons, 它是一个复杂度O(1)
+;; 的操作，所以第二个算法的复杂度为O(n)。
+;; 第一个算法则有所不同，它的每一步都需要调用append，
+;; 从以前的实现我们知道append的复杂度依赖于它的第一个参数，
+;; 这里它依赖的是树的左子树。对append的n个操作，每次操作
+;; 的数目都会减半，所以第一个算法的复杂度为O(n*log n)
