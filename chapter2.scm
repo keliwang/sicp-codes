@@ -1339,3 +1339,8 @@
 	 (cons (car set1) (intersection-set (cdr set1) set2)))
 	(else
 	 (intersection-set (cdr set1) set2))))
+;; union-set的复杂度由O(n^2)变为O(n)
+;; adjoin-set的复杂度由O(n)变为O(1)
+;; 由于set里允许有重复的元素，所以它的空间消耗会变大。
+;; 这种表示方法主要应该用在我们不关心空间消耗，同时
+;; 我们执行union-set和adjoin-set操作比较频繁时采用。
