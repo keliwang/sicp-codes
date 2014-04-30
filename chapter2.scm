@@ -1326,7 +1326,7 @@
 ;; Exercise 2.60
 (define (element-of-set? x set)
   (cond ((null? set) #f)
-	((equal? x (car set) #t))
+	((equal? x (car set)) #t)
 	(else
 	 (element-of-set? x (cdr set)))))
 (define (adjoin-set x set)
@@ -1371,3 +1371,17 @@
 	((< x (car set)) (cons x set))
 	(else
 	 (cons (car set) (adjoin-set x (cdr set))))))
+
+;; Exercise 2.62
+(define (union-set set1 set2)
+  (cond ((null? set1) set2)
+	((null? set2) set1)
+	(else
+	 (let ((x1 (car set1))
+	       (x2 (car set2)))
+	   (cond ((= x1 x2)
+		  (union-set (cdr set1) set2))
+		 ((< x1 x2)
+		  (cons x1 (union-set (cdr set1) set2)))
+		 ((> x1 x2)
+		  (cons x2 (union-set set1 (cdr set2)))))))))
