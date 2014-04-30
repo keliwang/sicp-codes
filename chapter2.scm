@@ -1490,3 +1490,38 @@
 ;; => (5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))
 ;; 上面的算法会访问列表中的所有节点，每次访问都只是
 ;; 做了一个cons操作，所以它的复杂度为O(n)。
+
+;; Exercise 2.65
+(define (union-set set1 set2)
+  (define (union-list list1 list2)
+    (cond ((null? list1) list2)
+	  ((null? list2) list1)
+	  (else
+	   (let ((x1 (car list1))
+		 (x2 (car list2)))
+	     (cond ((= x1 x2)
+		    (union-list (cdr list1) list2))
+		   ((< x1 x2)
+		    (cons x1 (union-list (cdr list1) list2)))
+		   ((> x1 x2)
+		    (cons x2 (union-list list1 (cdr list2)))))))))
+  (list->tree
+   (union-list
+    (tree->list-2 set1)
+    (tree->list-2 set2))))
+(define (intersection-set set1 set2)
+  (define (common-elements list1 list2)
+    (if (or (null? list1) (null? list2))
+	'()
+	(let ((x1 (car list1))
+	      (x2 (car list2)))
+	  (cond ((= x1 x2)
+		 (cons x1 (common-elements (cdr list1) (cdr list2))))
+		((< x1 x2)
+		 (common-elements (cdr list1) list2))
+		((> x1 x2)
+		 (common-elements list1 (cdr list2)))))))
+  (list->tree
+   (common-elements
+    (tree->list-2 set1)
+    (tree->list-2 set2))))
