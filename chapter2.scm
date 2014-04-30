@@ -1441,17 +1441,13 @@
 ;; => (1 3 5 7 9 11)
 ;; (tree->list-2 '(7 (3 (1 () ()) (5 () ())) (9 () (11 () ()))))
 ;; => (1 3 5 7 9 11)
-;; (tree->list-1 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
-)
+;; (tree->list-1 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ()))))))
 ;; => (1 3 5 7 9 11)
-;; (tree->list-2 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ())))))
-)
+;; (tree->list-2 '(3 (1 () ()) (7 (5 () ()) (9 () (11 () ()))))))
 ;; => (1 3 5 7 9 11)
-;; (tree->list-1 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
-)
+;; (tree->list-1 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ())))))
 ;; => (1 3 5 7 9 11)
-;; (tree->list-2 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ()))))
-)
+;; (tree->list-2 '(5 (3 (1 () ()) ()) (9 (7 () ()) (11 () ())))))
 ;; => (1 3 5 7 9 11)
 
 ;; 这两个算法都会访问树的每一个节点，但是其中也会有些不同。
@@ -1461,3 +1457,36 @@
 ;; 从以前的实现我们知道append的复杂度依赖于它的第一个参数，
 ;; 这里它依赖的是树的左子树。对append的n个操作，每次操作
 ;; 的数目都会减半，所以第一个算法的复杂度为O(n*log n)
+
+;; Exercise 2.64
+(define (list->tree elements)
+  (car (partial-tree elements (length elements))))
+(define (partial-tree elts n)
+  (if (= n 0)
+      (cons '() elts)
+      (let ((left-size (quotient (- n 1) 2)))
+	(let ((left-result
+	       (partial-tree elts left-size)))
+	  (let ((left-tree (car left-result))
+		(non-left-elts (cdr left-result))
+		(right-size (- n (+ left-size 1))))
+	    (let ((this-entry (car non-left-elts))
+		  (right-result
+		   (partial-tree
+		    (cdr non-left-elts)
+		    right-size)))
+	      (let ((right-tree (car right-result))
+		    (remaining-elts
+		     (cdr right-result)))
+		(cons (make-tree this-entry
+				 left-tree
+				 right-tree)
+		      remaining-elts))))))))
+;; partial-tree会将输入的元素分为三个部分，它们分别是
+;; 中间点，中间点左边部分和中间点右边部分。
+;; 然后对左右两个部分再分别使用partial-tree构建子树，
+;; 这是一个递归的过程。
+;; (list->tree '(1 3 5 7 9 11))
+;; => (5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))
+;; 上面的算法会访问列表中的所有节点，每次访问都只是
+;; 做了一个cons操作，所以它的复杂度为O(n)。
