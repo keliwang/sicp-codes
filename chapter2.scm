@@ -1615,3 +1615,29 @@
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 ;; (decode sample-message sample-tree)
 ;; => (A D A B B C A)
+
+;; Exercise 2.68
+(define (encode message tree)
+  (if (null? message)
+      '()
+      (append (encode-symbol (car message) tree)
+	      (encode (cdr message) tree))))
+(define (encode-symbol symbol tree)
+  (define (symbol-in-set? symbol set)
+    (cond ((null? set) #f)
+	  ((eq? (car set) symbol) #t)
+	  (else
+	   (symbol-in-set? symbol (cdr set)))))
+  (define (symbol-in-branch? symbol branch)    
+    (symbol-in-set? symbol (symbols branch)))
+  (cond ((leaf? tree) '())
+	((symbol-in-branch? symbol (left-branch tree))
+	 (cons 0 (encode-symbol symbol (left-branch tree))))
+	((symbol-in-branch? symbol (right-branch tree))
+	 (cons 1 (encode-symbol symbol (right-branch tree))))
+	(else
+	 (error "encode-symbol" "symbol not in tree" symbol tree))))
+;; 测试
+;; (encode '(A D A B B C A) sample-tree)
+;; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
+;; 与sample-message一致
