@@ -1641,3 +1641,16 @@
 ;; (encode '(A D A B B C A) sample-tree)
 ;; => (0 1 1 0 0 1 0 1 0 1 1 1 0)
 ;; 与sample-message一致
+
+;; Exercise 2.69
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+(define (successive-merge leaf-set)
+  (if (null? (cdr leaf-set))
+      (car leaf-set)
+      (let ((current-tree (make-code-tree
+			   (car leaf-set)
+			   (cadr leaf-set))))
+	(successive-merge
+	 (adjoin-set current-tree
+		     (cddr leaf-set))))))
