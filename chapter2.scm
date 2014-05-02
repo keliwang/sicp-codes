@@ -1654,3 +1654,18 @@
 	(successive-merge
 	 (adjoin-set current-tree
 		     (cddr leaf-set))))))
+
+;; Exercise 2.70
+(define lyric-tree (generate-huffman-tree
+		    '((a 2) (get 2) (sha 3) (wah 1)
+		      (boom 1) (job 2) (na 16) (yip 9))))
+(define lyric '(get a job sha na na na na na na na na
+		get a job sha na na na na na na na na
+		wah yip yip yip yip yip yip yip yip yip
+		sha boom))
+(define lyric-codes (encode lyric lyric-tree))
+;; (length lyric-codes) ;; 编码这首歌所需要的bit数
+;; => 84
+;; 如果使用定长编码方式来编码的话，8种不同的”字符“
+;; 最少需要三个bit来编码，所以编码上面的歌曲最少需要
+;; 36*3 = 108bit。
