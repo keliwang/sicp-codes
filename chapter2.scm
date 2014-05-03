@@ -1925,3 +1925,41 @@
 ;; d) 当我们将调用语句改为((get (operator exp) 'deriv) (operands exp) var)
 ;;    时，我们只要将package的install阶段改为与(put '+ 'derive sum-deriv)类似
 ;;    的方式就可以了。
+
+;; Exercise 2.74
+;; a)
+(define (get-record employee file)
+  ((get 'get-record (division file))
+   employee (contents file)))
+(define (make-file-with-division division file)
+  (cons division file))
+(define (division file)
+  (car division))
+(define (contents file)
+  (cdr file))
+
+;; b)
+(define (get-salary generic-record)
+  ((get 'get-salary (division generic-record))
+   (contents generic-record)))
+(define (make-generic-record record division)
+  (cons record division))
+(define (division record)
+  (car record))
+(define (contents record)
+  (cdr record))
+
+;; c)
+(define (find-employee-record employee files)
+  (cond ((null? files) (error "find-employee-record" "cannot file specific record" employee))
+	((in-division? employee (division (car files)))
+	 (get-record employee (car files)))
+	(else
+	 (find-employee-record
+	  employee
+	  (cdr files)))))
+(define (in-division? employee division)
+  ((get 'in-division? division) employee))
+
+;; d)
+;; 实现in-division?即可
