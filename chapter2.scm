@@ -1869,3 +1869,59 @@
   ((get 'make-from-real-imag 'rectangular) x y))
 (define (make-from-mag-ang r a)
   ((get 'make-from-mag-ang 'polar) r a))
+
+;; Exercise 2.73
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+	((variable? exp)
+	 (if (same-variable? exp var) 1 0))
+	(else ((get 'deriv (operator exp))
+	       (operands exp) var))))
+(define (operator exp) (car exp))
+(define (operands exp) (cdr exp))
+;; a) 上面的函数主要是先对exp分类，如果
+;;    exp为数字或变量则直接处理，如果
+;;    exp为表达式则查表找到相应的处理函数来处理。
+;;    不将number?和variable?也变为data-directed
+;;    dispatch是因为这两种情况下exp并没有操作符和
+;;    操作数的组成，它不是复合的语句。
+;; b)
+(define (install-sum-and-product-deriv-package)
+  (define (sum-deriv operands var)
+    (make-sum (deriv (addend operands) var)
+	      (deriv (augend operands) var)))
+  (define (addend operands)
+    (car operands))
+  (define (augend operands)
+    (cadr operands))
+
+  (define (product-deriv operands var)
+    (make-sum (make-product (deriv (multiplier operands) var)
+			    (multiplicand operands))
+	      (make-product (multiplier operands)
+			    (deriv (multiplicand operands) var))))  
+  (define (multiplicand operands)
+    (cadr operands))
+  (define (multiplier operands)
+    (car operands))
+
+  (put 'deriv '+ sum-deriv)
+  (put 'deriv '* product-deriv)
+  'done)
+;; c)
+(define (install-exponent-deriv-package)
+  (define (exponent-deriv operands var)
+    (make-product (exponent operands)
+		  (make-product (make-exponentiation (base operands)
+						     (- (exponent operands) 1))
+				(deriv (base operands) var))))
+  (define (base operands)
+    (car operands))
+  (define (exponent operands)
+    (cadr operands))
+
+  (put 'deriv '** exponent-deriv)
+  'done)
+;; d) 当我们将调用语句改为((get (operator exp) 'deriv) (operands exp) var)
+;;    时，我们只要将package的install阶段改为与(put '+ 'derive sum-deriv)类似
+;;    的方式就可以了。
