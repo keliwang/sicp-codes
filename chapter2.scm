@@ -1985,3 +1985,13 @@
 	  ((eq? op 'imag-part) (* r (sin a)))
 	  (else
 	   (error "make-from-mag-ang" "Unknown op" op)))))
+
+;; Exercise 2.76
+;; 要为显式分派的泛型操作添加新的类型，我们需要更新所有的泛型接口，使其可以识别
+;; 新的类型。要为显式分派的泛型操作添加新操作，我们需要对所有的已有类型实现这个
+;; 新操作，同时也要添加泛型接口。
+;; 为data-directed系统添加新类型和操作都只需要更新操作表
+;; 为message-passing系统添加新类型只需要实现这个类型就可以了，如果要添加一个新操作
+;; 的话，我们需要为每个类型都添加一条操作。
+;; 现有系统经常需要增加新类型或操作时，使用data-directed或message-passing系统都可以，
+;; 但是message-passing系统只允许有一个参数的操作。
