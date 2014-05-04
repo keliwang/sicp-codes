@@ -1963,3 +1963,15 @@
 
 ;; d)
 ;; 实现in-division?即可
+
+;; message passing
+(define (make-from-real-imag x y)
+  (define (dispatch op)
+    (cond ((eq? op 'real-part) x)
+	  ((eq? op 'imag-part) y)
+	  ((eq? op 'magnitude) (sqrt (+ square x) (square y)))
+	  ((eq? op 'angle) (atan y x))
+	  (else
+	   (error "make-from-real-imag" "Unknown op" op))))
+  dispatch)
+(define (apply-generic op arg) (arg op))
