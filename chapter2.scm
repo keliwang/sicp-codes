@@ -2093,3 +2093,23 @@
   ((get 'make-from-real-imag 'complex) x y))
 (define (make-complex-from-mag-ang r a)
   ((get 'make-from-mag-ang 'complex) r a))
+
+;; Exercise 2.77
+;; (put 'real-part '(complex) real-part)
+;; (put 'imag-part '(complex) imag-part)
+;; (put 'magnitude '(complex) magnitude)
+;; (put 'angle '(complex) angle)
+;; 加上上面的一组导出之后，apply-generic
+;; 就能识别参数为(complex)的real-part调用了。
+;; 而直接使用real-part是因为原先的real-part
+;; 都是可以识别(rectangular)等参数的。
+;; 调用(magitude z)的大致过程如下：
+;; (apply-generic 'magnitude '(complex rectangular 3 4))
+;; ((get 'magnitude '(complex)) '(rectangular 3 4))
+;; (apply-generic 'magnitude '(rectangular 3 4))
+;; ((get 'magnitude '(rectangular)) '(3 4))
+;; (magnitude (3 4))
+;; 由上可知，apply-generic 被调用了2次，第一次会调用可识别
+;; (complex)参数的magnitude函数，第二次会调用可识别(rectangular)
+;; 参数的magnitude函数。
+
