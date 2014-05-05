@@ -2113,3 +2113,22 @@
 ;; (complex)参数的magnitude函数，第二次会调用可识别(rectangular)
 ;; 参数的magnitude函数。
 
+;; Exercise 2.78
+(define (attach-tag tag contents)
+  (if (and (eq? tag 'scheme-number) (number? contents))
+      contents
+      (cons tag contents)))
+(define (type-tag datum)
+  (cond ((number? datum)
+	 'scheme-number)
+	((pair? datum)
+	 (car datum))
+	(else
+	 (error "type-tag" "datum is not valid" datum))))
+(define (contents datum)
+  (cond ((number? datum)
+	 datum)
+	((pair? datum)
+	 (cdr datum))
+	(else
+	 (error "contents" "datum is not valid" datum))))
