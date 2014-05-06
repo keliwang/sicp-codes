@@ -2187,3 +2187,34 @@
 			(else
 			 (error "apply-generic" "No method for these types" (list op type-tags))))))
 	      (error "apply-generic" "No method for these types" (list op type-tags)))))))
+
+;; Exercise 2.81
+;; a) 用两个complex数来调用exp会导致无限递归，从而引起程序假死。因为一旦
+;;    定义了相同类型的互转之后，即使exp无法处理complex参数，get-coerion阶段
+;;    也总是能找到complex->complex转换函数，导致(apply-generic 'exp (t1->t2 a1) a2)
+;;    被执行，而它又会导致下一个(apply-generic 'exp (t1->t2 a1) a2)的执行，
+;;    从而导致程序形成无限递归，无法退出。
+;; b) Louis是错的，因为apply-generic在尝试将相同类型互转时就会发现t1->t2和t2->t1的值都是
+;;    false，这样错误信息就可以正常的显示，并不会引起其它的问题。
+;; c) 如下：
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+	  (apply proc (map contents args))
+	  (if (= (length type-tags) 2)
+	      (let ((type1 (car type-tags))
+		    (type2 (cadr type-tags)))
+		(if (eq? type1 type2)
+		    (error "apply-generic" "No method for these types" (list op type-tags))
+		    (let ((t1->t2 (get-coercion type1 type2))
+			  (t2->t1 (get-coercion type2 type1))
+			  (a1 (car args))
+			  (a2 (cadr args)))
+		      (cond (t1->t2
+			     (apply-generic op (t1->t2 a1) a2))
+			    (t2->t1
+			     (apply-generic op a1 (t2->t1 a2)))
+			    (else
+			     (error "apply-generic" "No method for these types" (list op type-tags)))))
+		    (error "apply-generic" "No method for these types" (list op type-tags)))))))))
