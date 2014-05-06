@@ -2218,3 +2218,35 @@
 			    (else
 			     (error "apply-generic" "No method for these types" (list op type-tags)))))
 		    (error "apply-generic" "No method for these types" (list op type-tags)))))))))
+
+;; Exercise 2.82
+(define (apply-generic op . args)
+  (define (can-coercion-to-type? type types)
+    (cond ((null? types) #t)
+	  ((eq? type (car types))
+	   (can-coercion-to-type? type (cdr types)))
+	  ((get-coercion (car types) type)
+	   (can-coercion-to-type? type (cdr types)))
+	  (else #f)))
+  (define (get-valid-coercion-type-helper type-pos types)
+    (cond ((= type-pos (length types)) #f)
+	  ((can-coercion-to-type? (list-ref types type-pos) types)
+	   (list-ref types type-pos))
+	  (else
+	   (get-valid-coerion-type (+ type-pos 1) types))))
+  (define (get-valid-coercion-type types)
+    (get-valid-coercion-type-helper 0 types))
+  (define (coercion-all-args valid-type args)
+    (map (lambda (type)
+	   ((get-coercion type valid-type) type))
+	 args))
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+	  (apply proc (map contents args))
+	  (let ((valid-coercion-type (get-valid-coercion-type type-tags)))
+	    (if valid-coercion-type
+		(apply-generic op (coercion-all-args valid-coerion-type args))
+		(error "apply-generic" "No method for these types" (list op type-tags))))))))
+;; 假设有三个类型A, B, C，其中A可以方便的转化为B。假设一个函数(func B B C)，我们给的参数为A B C，
+;; 这样的话使用上面的方案就无法正常执行func了。
