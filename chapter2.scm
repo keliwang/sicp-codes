@@ -1969,7 +1969,7 @@
   (define (dispatch op)
     (cond ((eq? op 'real-part) x)
 	  ((eq? op 'imag-part) y)
-	  ((eq? op 'magnitude) (sqrt (+ square x) (square y)))
+	  ((eq? op 'magnitude) (sqrt (+ (square x) (square y))))
 	  ((eq? op 'angle) (atan y x))
 	  (else
 	   (error "make-from-real-imag" "Unknown op" op))))
@@ -1984,7 +1984,8 @@
 	  ((eq? op 'real-part) (* r (cos a)))
 	  ((eq? op 'imag-part) (* r (sin a)))
 	  (else
-	   (error "make-from-mag-ang" "Unknown op" op)))))
+	   (error "make-from-mag-ang" "Unknown op" op))))
+  dispatch)
 
 ;; Exercise 2.76
 ;; 要为显式分派的泛型操作添加新的类型，我们需要更新所有的泛型接口，使其可以识别
@@ -2165,9 +2166,9 @@
 ;; Coercion，即类型转换
 (define (scheme-number->complex n)
   (make-complex-from-real-imag (contents n) 0))
-(put-coercion 'scheme-number
-	      'complex
-	      scheme-number->complex)
+;; (put-coercion 'scheme-number
+;; 	      'complex
+;; 	      scheme-number->complex)
 (define (apply-generic op . args)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
@@ -2179,7 +2180,7 @@
 		    (a1 (car args))
 		    (a2 (cadr args)))
 		(let ((t1->t2 (get-coercion type1 type2))
-		      ((t2->t1 (get-coercion type2 type1))))
+		      (t2->t1 (get-coercion type2 type1)))
 		  (cond (t1->t2
 			 (apply-generic op (t1->t2 a1) a2))
 			(t2->t1
@@ -2216,8 +2217,8 @@
 			    (t2->t1
 			     (apply-generic op a1 (t2->t1 a2)))
 			    (else
-			     (error "apply-generic" "No method for these types" (list op type-tags)))))
-		    (error "apply-generic" "No method for these types" (list op type-tags)))))))))
+			     (error "apply-generic" "No method for these types" (list op type-tags)))))))
+	      (error "apply-generic" "No method for these types" (list op type-tags)))))))
 
 ;; Exercise 2.82
 (define (apply-generic op . args)
@@ -2250,3 +2251,19 @@
 		(error "apply-generic" "No method for these types" (list op type-tags))))))))
 ;; 假设有三个类型A, B, C，其中A可以方便的转化为B。假设一个函数(func B B C)，我们给的参数为A B C，
 ;; 这样的话使用上面的方案就无法正常执行func了。
+
+;; Exercise 2.83
+(define (raise x) (apply-generic 'raise x))
+;; 在install-scheme-number-package里加入
+;; (put 'raise '(scheme-number)
+;;      (lambda (x)
+;;        (if (integer? x)
+;; 	   (make-rat x 1)
+;; 	   (make-complex-from-real-imag x 0))))
+
+;; ;; 在install-rational-package里加入
+;; (put 'raise '(rational)
+;;      (lambda (r)
+;;        (make-complex-from-real-imag (/ (exact->inexact (numer r))
+;; 				       (denom r))
+;; 				    0)))
