@@ -1804,6 +1804,41 @@
 (define (make-from-mag-ang r a)
   (make-from-mag-ang-polar r a))
 
+;; my own package system
+(define my-generic-operation-table '())
+(define (put op types func)
+  (set! my-generic-operation-table
+	(cons (list op types func) my-generic-operation-table)))
+(define (get op types)
+  (define (exact-op? op types table-item)
+    (and (eq? op (car table-item))
+	 (equal? types (cadr table-item))))
+  (define (helper op types op-table)
+    (if (null? op-table)
+	#f
+	(let ((first-item (car op-table)))
+	  (if (exact-op? op types first-item)
+	      (caddr first-item)
+	      (helper op types (cdr op-table))))))
+  (helper op types my-generic-operation-table))
+
+(define my-coercion-table '())
+(define (put-coercion type1 type2 convert-func)
+  (set! my-coercion-table
+	(cons (list type1 type2 convert-func) my-coercion-table)))
+(define (get-coercion type1 type2)
+  (define (exact-func? type1 type2 table-item)
+    (and (eq? type1 (car table-item))
+	 (eq? type2 (cadr table-item))))
+  (define (helper type1 type2 table)
+    (if (null? table)
+	#f
+	(let ((first-item (car table)))
+	  (if (exact-func? type1 type2 first-item)
+	      (caddr first-item)
+	      (helper type1 type2 (cdr table))))))
+  (helper type1 type2 my-coercion-table))
+
 ;; use package
 (define (install-rectangular-package)
   ;; internal procedures
@@ -2234,7 +2269,7 @@
 	  ((can-coercion-to-type? (list-ref types type-pos) types)
 	   (list-ref types type-pos))
 	  (else
-	   (get-valid-coerion-type (+ type-pos 1) types))))
+	   (get-valid-coercion-type-helper (+ type-pos 1) types))))
   (define (get-valid-coercion-type types)
     (get-valid-coercion-type-helper 0 types))
   (define (coercion-all-args valid-type args)
@@ -2247,7 +2282,7 @@
 	  (apply proc (map contents args))
 	  (let ((valid-coercion-type (get-valid-coercion-type type-tags)))
 	    (if valid-coercion-type
-		(apply-generic op (coercion-all-args valid-coerion-type args))
+		(apply-generic op (coercion-all-args valid-coercion-type args))
 		(error "apply-generic" "No method for these types" (list op type-tags))))))))
 ;; 假设有三个类型A, B, C，其中A可以方便的转化为B。假设一个函数(func B B C)，我们给的参数为A B C，
 ;; 这样的话使用上面的方案就无法正常执行func了。
@@ -2312,7 +2347,7 @@
 		    (adjoin-term
 		     (make-term (order t1)
 				(add (coeff t1) (coeff t2)))
-		     (make-term (rest-terms L1)
+		     (add-term (rest-terms L1)
 				(rest-terms L2)))))))))
   (define (mul-terms L1 L2)
     (if (empty-termlist? L1)
@@ -2344,6 +2379,91 @@
        (lambda (p1 p2) (tag (add-poly p1 p2))))
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'make 'polynomial
+       (lambda (var terms) (tag (make-poly var terms))))
+  'done)
+(define (make-polynomial var terms)
+  ((get 'make 'polynomial) var terms))
+
+;; Exercise 2.87
+(define (install-polynomial-package)
+  ;; variable? and same-variable?
+  (define (variable? x)
+    (symbol? x))
+  (define (same-variable? v1 v2)
+    (and (variable? v1) (variable? v2) (eq? v1 v2)))
+  ;; polynomial constructions
+  (define (make-poly var termlist)
+    (cons var termlist))
+  (define (variable p)
+    (car p))
+  (define (term-list p)
+    (cdr p))
+  ;; term list operations
+  (define (make-term order coeff)
+    (list order coeff))
+  (define (order term) (car term))
+  (define (coeff term) (cadr term))
+  (define (the-empty-termlist) '())
+  (define (empty-termlist? termlist) (null? termlist))
+  (define (first-term termlist) (car termlist))
+  (define (rest-terms termlist) (cdr termlist))
+  (define (adjoin-term term termlist)
+    (if (=zero? (coeff term))
+	termlist
+	(cons term termlist)))
+  (define (add-terms L1 L2)
+    (cond ((empty-termlist? L1) L2)
+	  ((empty-termlist? L2) L1)
+	  (else
+	   (let ((p1 (first-term L1))
+		 (p2 (first-term L2)))
+	     (cond ((> (order p1) (order p2))
+		    (adjoin-term p1
+				 (add-terms (rest-terms L1) L2)))
+		   ((< (order p1) (order p2))
+		    (adjoin-term p2
+				 (add-terms L1 (rest-terms L2))))
+		   (else
+		    (adjoin-term (make-term (order p1) (add (coeff p1) (coeff p2)))
+				 (add-terms (rest-terms L1) (rest-terms L2)))))))))
+  (define (mul-terms L1 L2)
+    (if (empty-termlist? L1)
+	(the-empty-termlist)
+	(add-terms (mul-one-term-to-all (first-term L1) L2)
+		     (mul-terms (rest-terms L1) L2))))
+  (define (mul-one-term-to-all term termlist)
+    (if (empty-termlist? termlist)
+	(the-empty-termlist)
+	(let ((p (first-term termlist)))
+	  (adjoin-term (make-term (+ (order term) (order p))
+				  (mul (coeff term) (coeff p)))
+		       (mul-one-term-to-all term (rest-terms termlist))))))
+  ;; polynomial operations
+  (define (=poly-zero? p)
+    (define (helper termlist)
+      (cond ((null? termlist) #t)
+	    ((not (=zero? (coeff (first-term termlist)))) #f)
+	    (else
+	     (helper (rest-terms termlist)))))
+    (helper (term-list p)))
+  (define (add-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+	(make-poly (variable p1)
+		   (add-terms (term-list p1) (term-list p2)))
+	(error "ADD-POLY" "Poly not in same var" p1 p2)))
+  (define (mul-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+	(make-poly (variable p1)
+		   (mul-terms (term-list p1) (term-list p2)))
+	(error "MUL-POLY" "Poly not in same var" p1 p2)))
+  ;; install functions
+  (define (tag p) (attach-tag 'polynomial p))
+  (put 'add '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial)
+       (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put '=zero? '(polynomial) =poly-zero?)
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
   'done)
