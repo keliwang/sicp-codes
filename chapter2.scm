@@ -2038,6 +2038,7 @@
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
+(define (neg x) (apply-generic 'neg x))
 
 (define (install-scheme-number-package)
   (define (tag x) (attach-tag 'scheme-number x))
@@ -2049,6 +2050,8 @@
        (lambda (x y) (tag (* x y))))
   (put 'div '(scheme-number scheme-number)
        (lambda (x y) (tag (/ x y))))
+  (put 'neg '(scheme-number)
+       (lambda (x) (tag (- x))))
   (put 'make 'scheme-number (lambda (x) (tag x)))
   'done)
 (define (make-scheme-number x)
@@ -2110,6 +2113,9 @@
   (define (div-complex z1 z2)
     (make-from-mag-ang (/ (magnitude z1) (magnitude z2))
 		       (- (angle z1) (angle z2))))
+  (define (neg-complex z)
+    (make-from-real-imag (- (real-part z))
+			 (- (imag-part z))))
   ;; interface to rest of the system
   (define (tag z) (attach-tag 'complex z))
   (put 'add '(complex complex)
@@ -2120,6 +2126,8 @@
        (lambda (x y) (tag (mul-complex x y))))
   (put 'div '(complex complex)
        (lambda (x y) (tag (div-complex x y))))
+  (put 'neg '(complex)
+       (lambda (x) (tag (neg-complex x))))
   (put 'make-from-real-imag 'complex
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
@@ -2385,7 +2393,7 @@
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
 
-;; Exercise 2.87
+;; Exercise 2.87 & Exercise 2.88
 (define (install-polynomial-package)
   ;; variable? and same-variable?
   (define (variable? x)
@@ -2427,6 +2435,8 @@
 		   (else
 		    (adjoin-term (make-term (order p1) (add (coeff p1) (coeff p2)))
 				 (add-terms (rest-terms L1) (rest-terms L2)))))))))
+  (define (sub-terms L1 L2)
+    (add-terms L1 (neg-terms L2)))
   (define (mul-terms L1 L2)
     (if (empty-termlist? L1)
 	(the-empty-termlist)
@@ -2439,6 +2449,13 @@
 	  (adjoin-term (make-term (+ (order term) (order p))
 				  (mul (coeff term) (coeff p)))
 		       (mul-one-term-to-all term (rest-terms termlist))))))
+  (define (neg-terms termlist)
+    (if (empty-termlist? termlist)
+	(the-empty-termlist)
+	(let ((first (first-term termlist)))
+	  (adjoin-term (make-term (order first)
+				  (neg (coeff first)))
+		       (neg-terms (rest-terms termlist))))))
   ;; polynomial operations
   (define (=poly-zero? p)
     (define (helper termlist)
@@ -2452,17 +2469,29 @@
 	(make-poly (variable p1)
 		   (add-terms (term-list p1) (term-list p2)))
 	(error "ADD-POLY" "Poly not in same var" p1 p2)))
+  (define (sub-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+	(make-poly (variable p1)
+		   (sub-terms (term-list p1) (term-list p2)))
+	(error "SUB-POLY" "Poly not in same var" p1 p2)))
   (define (mul-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
 	(make-poly (variable p1)
 		   (mul-terms (term-list p1) (term-list p2)))
 	(error "MUL-POLY" "Poly not in same var" p1 p2)))
+  (define (neg-poly p)
+    (make-poly (variable p)
+	       (neg-terms (term-list p))))
   ;; install functions
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
        (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) (tag (sub-poly p1 p2))))
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'neg '(polynomial)
+       (lambda (p) (tag (neg-poly p))))
   (put '=zero? '(polynomial) =poly-zero?)
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
