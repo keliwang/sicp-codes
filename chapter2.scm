@@ -2393,7 +2393,7 @@
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
 
-;; Exercise 2.87 & Exercise 2.88
+;; Exercise 2.87 & Exercise 2.88 & Exercise 2.91
 (define (install-polynomial-package)
   ;; variable? and same-variable?
   (define (variable? x)
@@ -2449,6 +2449,23 @@
 	  (adjoin-term (make-term (+ (order term) (order p))
 				  (mul (coeff term) (coeff p)))
 		       (mul-one-term-to-all term (rest-terms termlist))))))
+  (define (div-terms L1 L2)
+    (if (empty-termlist? L1)
+	(list (the-empty-termlist) (the-empty-termlist))
+	(let ((t1 (first-term L1))
+	      (t2 (first-term L2)))
+	  (if (> (order t2) (order t1))
+	      (list (the-empty-termlist) L1)
+	      (let ((new-c (div (coeff t1) (coeff t2)))
+		    (new-o (- (order t1) (order t2))))
+		(let ((rest-of-result
+		       (div-terms (sub-terms L1
+					     (mul-one-term-to-all
+					      (make-term new-o new-c) L2))
+				  L2)))
+		  (list (adjoin-term (make-term new-o new-c)
+				     (car rest-of-result))
+			(cadr rest-of-result))))))))
   (define (neg-terms termlist)
     (if (empty-termlist? termlist)
 	(the-empty-termlist)
@@ -2479,6 +2496,12 @@
 	(make-poly (variable p1)
 		   (mul-terms (term-list p1) (term-list p2)))
 	(error "MUL-POLY" "Poly not in same var" p1 p2)))
+  (define (div-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+	(let ((result-list (div-terms (term-list p1) (term-list p2))))
+	  (list (make-poly (variable p1) (car result-list))
+		(make-poly (variable p1) (cadr result-list))))
+	(error "DIV-POLY" "Poly not in same var" p1 p2)))
   (define (neg-poly p)
     (make-poly (variable p)
 	       (neg-terms (term-list p))))
@@ -2490,6 +2513,11 @@
        (lambda (p1 p2) (tag (sub-poly p1 p2))))
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'div '(polynomial polynomial)
+       (lambda (p1 p2)
+	 (let ((result-list (div-poly p1 p2)))
+	   (list (tag (car result-list))
+		 (tag (cadr result-list))))))
   (put 'neg '(polynomial)
        (lambda (p) (tag (neg-poly p))))
   (put '=zero? '(polynomial) =poly-zero?)
