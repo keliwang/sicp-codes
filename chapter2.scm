@@ -2393,7 +2393,7 @@
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
 
-;; Exercise 2.87 & Exercise 2.88 & Exercise 2.91
+;; Exercise 2.87 & Exercise 2.88 & Exercise 2.91 & Exercise 2.94
 (define (install-polynomial-package)
   ;; variable? and same-variable?
   (define (variable? x)
@@ -2466,6 +2466,12 @@
 		  (list (adjoin-term (make-term new-o new-c)
 				     (car rest-of-result))
 			(cadr rest-of-result))))))))
+  (define (remainder-terms a b)
+    (cadr (div-terms a b)))
+  (define (gcd-terms a b)
+    (if (empty-termlist? b)
+	a
+	(gcd-terms b (remainder-terms a b))))
   (define (neg-terms termlist)
     (if (empty-termlist? termlist)
 	(the-empty-termlist)
@@ -2502,6 +2508,10 @@
 	  (list (make-poly (variable p1) (car result-list))
 		(make-poly (variable p1) (cadr result-list))))
 	(error "DIV-POLY" "Poly not in same var" p1 p2)))
+  (define (gcd-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+	(make-poly (variable p1) (gcd-terms (term-list p1) (term-list p2)))
+	(error "GCD-POLY" "Poly not in same var" p1 p2)))
   (define (neg-poly p)
     (make-poly (variable p)
 	       (neg-terms (term-list p))))
@@ -2518,6 +2528,9 @@
 	 (let ((result-list (div-poly p1 p2)))
 	   (list (tag (car result-list))
 		 (tag (cadr result-list))))))
+  (put 'gcd '(polynomial polynomial)
+       (lambda (p1 p2)
+	 (tag (gcd-poly p1 p2))))
   (put 'neg '(polynomial)
        (lambda (p) (tag (neg-poly p))))
   (put '=zero? '(polynomial) =poly-zero?)
@@ -2847,3 +2860,7 @@
   'done)
 (define (make-rational n d)
   ((get 'make 'rational) n d))
+
+;; Exercise 2.94
+(define (greatest-common-divisor p1 p2)
+  (apply-generic 'gcd p1 p2))
