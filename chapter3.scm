@@ -38,3 +38,9 @@
 	   deposit)
 	  (else (error "MAKE-ACCOUNT" "Unknown request" m))))
   dispatch)
+
+;; Exercise 3.1
+(define (make-accumulator sum)
+  (lambda (val)
+    (set! sum (+ val sum))
+    sum))
