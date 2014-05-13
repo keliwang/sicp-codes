@@ -44,3 +44,16 @@
   (lambda (val)
     (set! sum (+ val sum))
     sum))
+
+;; Exercise 3.2
+(define (make-monitored procedure)
+  (let ((counter 0))
+    (define (dispatch m)
+      (cond ((eq? m 'how-many-calls?)
+	     counter)
+	    ((eq? m 'reset-count)
+	     (set! counter 0))
+	    (else
+	     (set! counter (+ counter 1))
+	     (procedure m))))
+    dispatch))
