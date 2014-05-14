@@ -155,3 +155,23 @@
 ;; 		     trials-passed
 ;; 		     x2))))))
 ;;   (iter trials 0 initial-x))
+
+;; Exercise 3.5
+(define (random-in-range low high)
+  (let ((range (- high low)))
+    (+ low (random range))))
+(define (integral-test pred x1 x2 y1 y2)
+  (pred (random-in-range x1 x2) (random-in-range y1 y2)))
+(define (estimate-integral pred x1 x2 y1 y2 trials)
+  (* (- x2 x1) (- y2 y1) (monte-carlo trials
+				      (lambda ()
+					(integral-test pred x1 x2 y1 y2)))))
+
+(define (square x)
+  (* x x))
+(define (sample-integral-pred x y)
+  (>= (square 3) (+ (square (- x 5))
+		    (square (- y 7)))))
+(define (estimate-pi-2 trials)
+  (/ (estimate-integral sample-integral-pred 2.0 8.0 4.0 10.0 trials)
+     (square 3.0)))
