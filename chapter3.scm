@@ -175,3 +175,21 @@
 (define (estimate-pi-2 trials)
   (/ (estimate-integral sample-integral-pred 2.0 8.0 4.0 10.0 trials)
      (square 3.0)))
+
+;; Exercise 3.6
+(define random-init 1)
+(define (rand m)
+  (let ((x random-init))
+    (define (generate)
+      (set! x (rand-update x))
+      x)
+    (define (reset seed)
+      (set! x seed))
+    (define (dispatch m)
+      (cond ((eq? m 'generate)
+	     (generate))
+	    ((eq? m 'reset)
+	     reset)
+	    (else
+	     (error "RAND" "Unknown message" m))))
+    (dispatch m)))
