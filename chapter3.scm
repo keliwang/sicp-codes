@@ -248,3 +248,16 @@
 (define (make-joint account passwd new-passwd)
   ((account passwd 'make-joint) new-passwd)
   account)
+
+;; Exercise 3.8
+;; 一旦有一次参数为0，则以后总是返回0
+;; 否则会返回参数
+(define f
+  (let ((always-return-zero #f))
+    (lambda (n)
+      (if always-return-zero
+	  0
+	  (if (= n 0)
+	      (begin (set! always-return-zero #t)
+		     0)
+	      n)))))
