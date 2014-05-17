@@ -284,3 +284,7 @@
 ;; 随后需要执行(fact-iter 1 1 n)，此时会创建环境E2，E2指向全局环境，同时保存
 ;; 了三个参数的绑定。然后由于fact-iter内部也需要调用fact-iter，所以又会接着创建
 ;; 环境E3, E4, E5, E6, E7, E8。
+
+;; Exercise 3.10
+;; see https://dl.dropboxusercontent.com/u/63681644/images/sicp-ex-3-10.png
+
