@@ -261,3 +261,26 @@
 	      (begin (set! always-return-zero #t)
 		     0)
 	      n)))))
+
+;; Exercise 3.9
+(define (factorial n)
+  (if (= n 1)
+      1
+      (* n (factorial (- n 1)))))
+;; (factorial 6)执行时首先会创建环境E1，
+;; E1里有参数n的绑定值6，factorial在全局环境中存在。
+;; 由于(factorial 6)内部需要调用(factorial 5)，所以
+;; 会创建环境E2，E2执行全局环境，同时包含参数n的绑定值5。
+;; 依此类推，随后还会创建环境E3, E4, E5, E6。
+(define (factorial n)
+  (fact-iter 1 1 n))
+(define (fact-iter product counter max-count)
+  (if (> counter max-count)
+      product
+      (fact-iter (* product counter)
+		 (+ counter 1)
+		 max-count)))
+;; 执行(factorial 6)时首先会创建环境E1，E1指向全局环境，同时保存有n的绑定值6。
+;; 随后需要执行(fact-iter 1 1 n)，此时会创建环境E2，E2指向全局环境，同时保存
+;; 了三个参数的绑定。然后由于fact-iter内部也需要调用fact-iter，所以又会接着创建
+;; 环境E3, E4, E5, E6, E7, E8。
