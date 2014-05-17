@@ -286,5 +286,9 @@
 ;; 环境E3, E4, E5, E6, E7, E8。
 
 ;; Exercise 3.10
+;; from: http://wqzhang.wordpress.com/2009/07/13/sicp-exercise-3-10/
 ;; see https://dl.dropboxusercontent.com/u/63681644/images/sicp-ex-3-10.png
 
+;; Exercise 3.11
+;; from: http://wqzhang.wordpress.com/2009/07/14/sicp-exercise-3-11/
+;; see https://dl.dropboxusercontent.com/u/63681644/images/sicp-ex-3-11.png
