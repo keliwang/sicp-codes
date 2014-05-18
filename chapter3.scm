@@ -325,3 +325,13 @@
 ;; => (a b c d)
 ;; (cdr x)
 ;; => (b c d)
+
+;; Exercise 3.13
+(define (make-cycle x)
+  (set-cdr! (last-pair x) x)
+  x)
+(define z (make-cycle (list 'a 'b 'c)))
+
+;; (last-pair z)将会无限递归下去，因为last-pair的终止
+;; 条件是参数的cdr为nil，但是由于z是一个环，它的cdr也依旧
+;; 是一个环，不会变成nil，所以last-pair永远都不会停止。
