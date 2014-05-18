@@ -353,3 +353,18 @@
 ;; => (a)
 ;; w
 ;; => (c b a)
+
+(define (set-to-wow! x)
+  (set-car! (car x) 'wow)
+  x)
+;; (define x (cons 'a 'b))
+;; (define z1 (cons x x))
+;; (define z2 (cons '(a b) '(a b)))
+;; (set-to-wow! z1)
+;; ((wow b) wow b)
+;; (set-to-wow! z2)
+;; ((wow b) a b)
+
+;; Exercise 3.15
+;; from: http://wqzhang.wordpress.com/2009/07/15/sicp-exercise-3-15/
+;; see https://dl.dropboxusercontent.com/u/63681644/images/sicp-ex-3-15.png
