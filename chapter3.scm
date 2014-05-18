@@ -292,3 +292,10 @@
 ;; Exercise 3.11
 ;; from: http://wqzhang.wordpress.com/2009/07/14/sicp-exercise-3-11/
 ;; see https://dl.dropboxusercontent.com/u/63681644/images/sicp-ex-3-11.png
+
+;; cons的实现
+;; (define (my-cons x y)
+;;   (let ((new (get-new-pair)))
+;;     (set-car! new x)
+;;     (set-cdr! new y)
+;;     new))
