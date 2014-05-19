@@ -469,3 +469,7 @@
 (define (my-set-cdr! z new-value)
   ((z 'set-cdr!) new-value)
   z)
+
+;; Exercise 3.20
+;; from http://wizardbook.wordpress.com/2010/12/16/exercise-3-20/
+;; see https://dl.dropboxusercontent.com/u/63681644/images/sicp-ex-3-20.png
