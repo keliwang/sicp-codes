@@ -406,3 +406,16 @@
 			(do-count-pairs (cdr lst))
 			1)))))
     (do-count-pairs lst)))
+
+;; Exercise 3.18
+(define (cycle? lst)
+  (let ((unique-pairs '()))
+    (define (do-detect-cycle lst)
+      (let ((lst-cdr (cdr lst)))
+	(if (null? lst-cdr)
+	    #f
+	    (begin (set! unique-pairs (cons lst unique-pairs))
+		   (if (memq lst-cdr unique-pairs)
+		       #t
+		       (do-detect-cycle lst-cdr))))))
+    (do-detect-cycle lst)))
