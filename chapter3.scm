@@ -368,3 +368,26 @@
 ;; Exercise 3.15
 ;; from: http://wqzhang.wordpress.com/2009/07/15/sicp-exercise-3-15/
 ;; see https://dl.dropboxusercontent.com/u/63681644/images/sicp-ex-3-15.png
+
+;; Exercise 3.16
+(define (count-pairs x)
+  (if (not (pair? x))
+      0
+      (+ (count-pairs (car x))
+	 (count-pairs (cdr x))
+	 1)))
+(define z1 '(a b c))
+(count-pairs z1)
+;; => 3
+(define x '(a))
+(define z2 (list x x))
+(count-pairs z2)
+;; => 4
+(define x '(a))
+(define y (cons x x))
+(define z3 (cons y y))
+(count-pairs z3)
+;; => 7
+(define z4 '(a b c))
+(set-cdr! (cddr z4) z4)
+;; (count-pairs z4) ;;无限递归
