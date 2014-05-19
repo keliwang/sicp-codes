@@ -421,6 +421,7 @@
     (do-detect-cycle lst)))
 
 ;; Exercise 3.19
+;; using http://en.wikipedia.org/wiki/Cycle_detection#Tortoise_and_hare
 (define (cycle? lst)
   (define (get-slow lst)
     (if (null? lst)
