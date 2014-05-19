@@ -419,3 +419,22 @@
 		       #t
 		       (do-detect-cycle lst-cdr))))))
     (do-detect-cycle lst)))
+
+;; Exercise 3.19
+(define (cycle? lst)
+  (define (get-slow lst)
+    (if (null? lst)
+	'()
+	(cdr lst)))
+  (define (get-fast lst)
+    (cond ((null? lst) '())
+	  ((null? (cdr lst)) '())
+	  (else (cddr lst))))
+  (define (detect-cycle slow fast)
+    (cond ((or (null? slow) (null? fast))
+	   #f)
+	  ((eq? slow fast)
+	   #t)
+	  (else
+	   (detect-cycle (get-slow slow) (get-fast fast)))))
+  (detect-cycle (get-slow lst) (get-fast lst)))
