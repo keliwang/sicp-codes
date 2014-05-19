@@ -391,3 +391,18 @@
 (define z4 '(a b c))
 (set-cdr! (cddr z4) z4)
 ;; (count-pairs z4) ;;无限递归
+
+;; Exercise 3.17
+(define (count-pairs lst)
+  (let ((visited-pairs '()))
+    (define (do-count-pairs lst)
+      (if (not (pair? lst))
+	  0
+	  (if (memq lst visited-pairs)
+	      (+ (do-count-pairs (car lst))
+		 (do-count-pairs (cdr lst)))
+	      (begin (set! visited-pairs (cons lst visited-pairs))
+		     (+ (do-count-pairs (car lst))
+			(do-count-pairs (cdr lst))
+			1)))))
+    (do-count-pairs lst)))
