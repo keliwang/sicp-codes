@@ -502,6 +502,11 @@
 	   queue))))
 (define (delete-queue! queue)
   (cond ((empty-queue? queue)
-	 (error "DELETE-QUEUE!" "called with an empty queue")
-	 (else (set-front-ptr! queue (cdr (front-ptr queue)))
-	       queue))))
+	 (error "DELETE-QUEUE!" "called with an empty queue"))
+	(else
+	 (set-front-ptr! queue (cdr (front-ptr queue)))	 
+	 queue)))
+
+;; Exercise 3.21
+(define (print-queue queue)
+  (display (front-ptr queue)))
