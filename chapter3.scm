@@ -639,7 +639,7 @@
 	 (car records))
 	(else (assoc key (cdr records)))))
 (define (insert-table! key value table)
-  (let ((record (assoc key table)))
+  (let ((record (assoc key  (cdr table))))
     (if record
 	(set-cdr! record value)
 	(set-cdr! table
@@ -650,7 +650,7 @@
   (list '*table*))
 
 ;; two dimensional table
-(define (lookup key-1 key-2 table)
+(define (lookup-two-dim key-1 key-2 table)
   (let ((subtable (assoc key-1 (cdr table))))
     (if subtable
 	(let ((record (assoc key-2 (cdr subtable))))
@@ -658,7 +658,7 @@
 	      (cdr record)
 	      #f))
 	#f)))
-(define (insert-table! key-1 key-2 value table)
+(define (insert-two-dim-table! key-1 key-2 value table)
   (let ((subtable (assoc key-1 (cdr table))))
     (if subtable
 	(let ((record (assoc key-2 (cdr subtable))))
@@ -674,7 +674,7 @@
   'OK)
 
 ;; local table
-(define (make-table)
+(define (make-table-0)
   (let ((local-table (list '*table*)))
     (define (lookup key-1 key-2)
       (let ((subtable (assoc key-1 (cdr local-table))))
@@ -702,7 +702,7 @@
 	    ((eq? m 'insert-proc!) insert!)
 	    (else (error "TABLE" "Unknown operation" m))))
     dispatch))
-(define operation-table (make-table))
+(define operation-table (make-table-0))
 (define get (operation-table 'lookup-proc))
 (define put (operation-table 'insert-proc!))
 
@@ -814,7 +814,7 @@
 (define key-< <)
 (define key-> >)
 
-(define (make-table)
+(define (make-table-4)
   (let ((local-table (list '*table*)))
     (define (lookup key-list) 
       (define (lookup1 keys table)
