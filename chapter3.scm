@@ -847,3 +847,26 @@
             ((eq? m 'insert-proc!) insert!)
             (else (error "Unknown operation -- TABLE" m))))
     dispatch))
+
+;; Exercise 3.27
+(define (memoize f)
+  (let ((table (make-table)))
+    (lambda (x)
+      (let ((previously-computed-result
+	     (lookup x table)))
+	(or previously-computed-result
+	    (let ((result (f x)))
+	      (insert-table! x result table)
+	      result))))))
+(define memo-fib
+  (memoize
+   (lambda (n)
+     (cond ((= n 0) 0)
+	   ((= n 1) 1)
+	   (else (+ (memo-fib (- n 1))
+		    (memo-fib (- n 2))))))))
+;; memo-fib在计算第n个fibonacci数的时候不在
+;; 需要重复计算已计算出来的值，那么它所要计算的值
+;; 则是(fib 0) -> (fib (- n 1))，因而其复杂度为O(n)。
+;; 直接使用(memoize fib)的话，那么它还是要重复计算
+;; (fib (- n 1))和(fib (- n 2))。
