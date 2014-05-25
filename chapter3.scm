@@ -870,3 +870,22 @@
 ;; 则是(fib 0) -> (fib (- n 1))，因而其复杂度为O(n)。
 ;; 直接使用(memoize fib)的话，那么它还是要重复计算
 ;; (fib (- n 1))和(fib (- n 2))。
+
+;; half-adder
+;; half-adder
+(define (half-adder a b s c)
+  (let ((d (make-wire))
+	(e (make-wire)))
+    (or-gate a b d)
+    (and-gate a b c)
+    (inverter c e)
+    (and-gate d e s)
+    'OK))
+(define (full-adder a b c-in sum c-out)
+  (let ((s (make-wire))
+	(c1 (make-wire))
+	(c2 (make-wire)))
+    (half-adder b c-in s c1)
+    (half-adder a s sum c2)
+    (or-gate c1 c2 c-out)
+    'OK))
