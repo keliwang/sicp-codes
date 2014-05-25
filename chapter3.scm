@@ -915,3 +915,18 @@
   (cond ((and (= a 1) (= b 1)) 1)
 	((or (= a 0) (= b 0)) 0)
 	(else (error "LOGICAL-AND" "Invalid signals" a b))))
+
+;; Exercise 3.28
+(define (or-gate a1 a2 output)
+  (define (or-gate-procedure)
+    (let ((new-value
+	   (logical-or (get-signal a1) (get-signal a2))))
+      (after-delay or-gate-delay
+		   (lambda () (set-signal! output new-value)))))
+  (add-action! a1 or-gate-procedure)
+  (add-action! a2 or-gate-procedure)
+  'OK)
+(define (logical-or a b)
+  (cond ((and (= a 0) (= b 0)) 0)
+	((or (= a 1) (= b 1)) 1)
+	(else (error "LOGICAL-OR" "Invalid signals" a b))))
