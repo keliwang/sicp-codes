@@ -981,3 +981,8 @@
 	(set-signal! c-in 0)
 	(ripple-carry-adder (cdr a-list) (cdr b-list) (cdr s-list) c-in))
     (full-adder (car a-list) (car b-list) c-in (car s-list) c)))
+;; delay = n * full-adder-delay
+;; = n * (half-adder-delay*2 + or-gate-delay)
+;; = n * (2*(max(and-gate-delay+inverter-delay, or-gate-delay)
+;;           + and-gate-delay)
+;;        + or-gate-delay)
