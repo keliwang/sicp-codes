@@ -930,3 +930,18 @@
   (cond ((and (= a 0) (= b 0)) 0)
 	((or (= a 1) (= b 1)) 1)
 	(else (error "LOGICAL-OR" "Invalid signals" a b))))
+
+;; Exercise 3.29
+(define (compound-or-gate a1 a2 output)
+  (define (or-gate-procedure)
+    (let ((not-a1 (make-wire))
+	  (not-a2 (make-wire))
+	  (b (make-wire)))
+      (inverter a1 not-a1)
+      (inverter a2 not-a2)
+      (and-gate not-a1 not-a2 b)
+      (inverter b output)))
+  (add-action! a1 or-gate-procedure)
+  (add-action! a2 or-gate-procedure)
+  'OK)
+;; 这个or gate实现的延时是一个and gate的延时加上两个inverter的延时
