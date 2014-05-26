@@ -512,7 +512,7 @@
   (display (front-ptr queue)))
 
 ;; Exercise 3.22
-(define (make-queue)
+(define (make-queue-2)
   (let ((front-ptr '())
 	(rear-ptr '()))
     (define (print-queue)
@@ -551,12 +551,6 @@
 	    (else
 	     (error "QUEUE" "unknown message" m))))
     dispatch))
-(define (empty-queue? queue)
-  ((queue 'empty-queue?)))
-(define (insert-queue! queue item)
-  ((queue 'insert-queue!) item))
-(define (delete-queue! queue)
-  ((queue 'delete-queue!)))
 
 ;; Exercise 3.23
 (define (make-deque)
@@ -1021,7 +1015,7 @@
 
 ;; a sample simulation
 (define (after-delay delay action)
-  (add-to-agenda! (+ delay (current-time the-agenda))
+  (add-to-agenda! (+ delay (current-time-agenda the-agenda))
 		  action
 		  the-agenda))
 (define (propagate)
@@ -1037,10 +1031,73 @@
 		 (newline)
 		 (display name)
 		 (display " ")
-		 (display (current-time the-agenda))
+		 (display (current-time-agenda the-agenda))
 		 (display " New-value = ")
 		 (display (get-signal wire)))))
-(define the-agenda (make-agenda))
 (define inverter-delay 2)
 (define and-gate-delay 3)
 (define or-gate-delay 5)
+
+;; implementing the agenda
+(define (make-time-segment time queue)
+  (cons time queue))
+(define (segment-time s) (car s))
+(define (segment-queue s) (cdr s))
+
+(define (make-agenda)
+  (list 0))
+(define (current-time-agenda agenda)
+  (car agenda))
+(define (set-current-time! agenda time)
+  (set-car! agenda time))
+(define (segments agenda)
+  (cdr agenda))
+(define (set-segments! agenda segments)
+  (set-cdr! agenda segments))
+(define (first-segment agenda)
+  (car (segments agenda)))
+(define (rest-segments agenda)
+  (cdr (segments agenda)))
+(define (empty-agenda? agenda)
+  (null? (segments agenda)))
+
+(define (add-to-agenda! time action agenda)
+  (define (belongs-before? segments)
+    (or (null? segments)
+	(< time (segment-time (car segments)))))
+  (define (make-new-time-segment time action)
+    (let ((q (make-queue)))
+      (insert-queue! q action)
+      (make-time-segment time q)))
+  (define (add-to-segments! segments)
+    (if (= (segment-time (car segments)) time)
+	(insert-queue! (segment-queue (car segments))
+		       action)
+	(let ((rest (cdr segments)))
+	  (if (belongs-before? rest)
+	      (set-cdr!
+	       segments
+	       (cons (make-new-time-segment time action)
+		     (cdr segments)))
+	      (add-to-segments! rest)))))
+  (let ((segments (segments agenda)))
+    (if (belongs-before? segments)
+	(set-segments!
+	 agenda
+	 (cons (make-new-time-segment time action)
+	       segments))
+	(add-to-segments! segments))))
+
+(define (remove-first-agenda-item! agenda)
+  (let ((q (segment-queue (first-segment agenda))))
+    (delete-queue! q)
+    (if (empty-queue? q)
+	(set-segments! agenda (rest-segments agenda)))))
+(define (first-agenda-item agenda)
+  (if (empty-agenda? agenda)
+      (error "FIRST-AGENDA-ITEM" "Agenda is empty")
+      (let ((first-seg (first-segment agenda)))
+	(set-current-time! agenda
+			   (segment-time first-seg))
+	(front-queue (segment-queue first-seg)))))
+(define the-agenda (make-agenda))
