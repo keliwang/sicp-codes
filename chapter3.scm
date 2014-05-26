@@ -1038,6 +1038,9 @@
 (define and-gate-delay 3)
 (define or-gate-delay 5)
 
+;; Exercise 3.31
+;; 如果立刻运行action的话，agenda表里就是空的了。
+
 ;; implementing the agenda
 (define (make-time-segment time queue)
   (cons time queue))
