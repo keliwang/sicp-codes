@@ -1039,7 +1039,7 @@
 (define or-gate-delay 5)
 
 ;; Exercise 3.31
-;; 如果立刻运行action的话，agenda表里就是空的了。
+;; 如果不立刻运行action的话，agenda表就是空的了。
 
 ;; implementing the agenda
 (define (make-time-segment time queue)
@@ -1104,3 +1104,14 @@
 			   (segment-time first-seg))
 	(front-queue (segment-queue first-seg)))))
 (define the-agenda (make-agenda))
+
+;; Exercise 3.32
+;; 顺序是非常重要的，以and-gate为例来说明。
+;; and-gate的procedure是(lambda () (set-signal! ouput new-value))，
+;; 这里的new-value是依赖于procedure执行时的输入线的状态的。比如下面的
+;; 操作: (and-gate input-1 input-2 output)，(set-signal! input-1 1)
+;; (set-signal! input-2 1)。上面的三个操作都会将procedure加入到agenda
+;; 中，如果它们是first in, first out执行的话，最终的结果会由
+;; (set-signal! input-2 1)执行时加入aganda的procedure觉得，即值为1。
+;; 如果按照first in, last out执行的话，最终结果会由(and-gate input-1 input-2 output)
+;; 执行时加入agenda的procedure觉得，即值为0。
