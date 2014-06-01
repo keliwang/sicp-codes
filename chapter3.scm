@@ -1281,3 +1281,12 @@
 	  ((eq? (procedure (car items))
 		(loop (cdr items))))))
   (loop lst))
+
+;; Exercise 3.33
+(define (averager a b c)
+  (let ((u (make-connector))
+	(v (make-connector)))
+    (adder a b u)
+    (multiplier c v u)
+    (constant 2 v)
+    'ok))
