@@ -1290,3 +1290,13 @@
     (multiplier c v u)
     (constant 2 v)
     'ok))
+
+;; Exercise 3.34
+;; (define (squarer a b)
+;;   (multiplier a a b))
+;; 上面定义的squarer的问题在于：
+;;   虽然我们可以通过设置a的值来获取b的值，
+;;   但是我们无法通过设置b的值来获得a的值。
+;;   因为设置a的值相当于同时设置了两个connector的值，
+;;   而设置b的值只会影响b这一个connector的值，a代表的
+;;   2个connector都是没有值的，因而无法计算出a的值。
