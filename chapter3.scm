@@ -1324,3 +1324,28 @@
   (connect a me)
   (connect b me)
   me)
+
+;; Exercise 3.36
+;; TODO
+
+;; Exercise 3.37
+(define (celsius-fahrenheit-converter-2 x)
+  (c+ (c* (c/ (cv 9) (cv 5))
+	  x)
+      (cv 32)))
+(define (c+ x y)
+  (let ((z (make-connector)))
+    (adder x y z)
+    z))
+(define (c* x y)
+  (let ((z (make-connector)))
+    (multiplier x y z)
+    z))
+(define (c/ x y)
+  (let ((z (make-connector)))
+    (multiplier y z x)
+    z))
+(define (cv x)
+  (let ((z (make-connector)))
+    (constant x z)
+    z))
