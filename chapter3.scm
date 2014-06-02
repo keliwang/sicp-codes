@@ -1349,3 +1349,7 @@
   (let ((z (make-connector)))
     (constant x z)
     z))
+
+;; Exercise 3.38
+;; 1) 可能的值分别是35, 40, 45, 50
+;; 2) TODO, see: http://wqzhang.wordpress.com/2009/07/30/sicp-exercise-3-38/
