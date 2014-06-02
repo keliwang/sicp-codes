@@ -1300,3 +1300,27 @@
 ;;   因为设置a的值相当于同时设置了两个connector的值，
 ;;   而设置b的值只会影响b这一个connector的值，a代表的
 ;;   2个connector都是没有值的，因而无法计算出a的值。
+
+;; Exercise 3.35
+(define (square x)
+  (* x x))
+(define (squarer a b)
+  (define (process-new-value)
+    (if (has-value? b)
+	(if (< (get-value b) 0)
+	    (error "SQUARER" "square less than 0" (get-value b))
+	    (set-value! a (sqrt (get-value b)) me))
+	(if (has-value? a)
+	    (set-value! b (square (get-value a)) me))))
+  (define (process-forget-value)
+    (forget-value! a me)
+    (forget-value! b me)
+    (process-new-value))
+  (define (me request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+	  ((eq? request 'I-lost-my-value) (process-forget-value))
+	  (else
+	   (error "SQUARER" "Unknown request" request))))
+  (connect a me)
+  (connect b me)
+  me)
