@@ -1364,3 +1364,9 @@
 ;; 无serializer时同一个函数内对x的多次访问可能会获得不同的值，
 ;; 从而影响到最终的结果。
 ;; 加入serializer之后只有两种情况，100^3或1000^2。
+
+;; Exercise 3.41
+;; Ben的担心是多余的，因为会修改balance的deposit和withdraw都被保护了。
+;; 对balance获取增加保护也是可取的，因为它可以使每次取出的balance都是
+;; 准确的，不会是withdraw或deposit执行中的中间结果。
+
