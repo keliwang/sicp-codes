@@ -1370,3 +1370,6 @@
 ;; 对balance获取增加保护也是可取的，因为它可以使每次取出的balance都是
 ;; 准确的，不会是withdraw或deposit执行中的中间结果。
 
+;; Exercise 3.42
+;; 这个改变是完全安全的。它们的concurrency行为是一致的。
+
