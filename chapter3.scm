@@ -1373,3 +1373,21 @@
 ;; Exercise 3.42
 ;; 这个改变是完全安全的。它们的concurrency行为是一致的。
 
+
+(define (make-account-and-serializer balance)
+  (define (withdraw amount)
+    (if (>= balance amount)
+	(begin (set! balance (- balance amount))
+	       balance)
+	"Insufficient funds"))
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
+  (let ((balance-serializer (make-serializer)))
+    (define (dispatch m)
+      (cond ((eq? m 'withdraw) withdraw)
+	    ((eq? m 'deposit) deposit)
+	    ((eq? m 'balance) balance)
+	    ((eq? m 'serializer) balance-serializer)
+	    (else (error "ACCOUNT" "Unknown request" m))))
+    dispatch))
