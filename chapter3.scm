@@ -1403,3 +1403,28 @@
 ;; 由于serializer已经被调用了，等到执行(account1 'withdraw)和
 ;; (account2 'deposit)时，serializer根本不会被release，这两
 ;; 个函数也无法执行。
+
+(define (make-serializer)
+  (let ((mutex (make-mutex)))
+    (lambda (p)
+      (define (serialized-p . args)
+	(mutex 'acquire)
+	(let ((val (apply p args)))
+	  (mutex 'release)
+	  val))
+      serialized-p)))
+(define (make-mutex)
+  (define (clear! cell)
+    (set-car! cell false))
+  (define (test-and-set! cell) ;; this procedure should be atomatic
+    (if (car cell)
+	true
+	(begin (set-car! cell true)
+	       false)))
+  (let ((cell (list false)))
+    (define (the-mutex m)
+      (cond ((eq? m 'acquire)
+	     (if (test-and-set! cell)
+		 (the-mutex 'acquire)))
+	    ((eq? m 'release)
+	     (clear! cell))))))
