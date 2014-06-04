@@ -1391,3 +1391,9 @@
 	    ((eq? m 'serializer) balance-serializer)
 	    (else (error "ACCOUNT" "Unknown request" m))))
     dispatch))
+
+;; Exercise 3.43
+;; see http://wqzhang.wordpress.com/2009/08/03/sicp-exercise-3-43/
+
+;; Exercise 3.44
+;; Louis是错的，transfer只要保证总额不变就可以了。
