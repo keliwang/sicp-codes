@@ -1397,3 +1397,9 @@
 
 ;; Exercise 3.44
 ;; Louis是错的，transfer只要保证总额不变就可以了。
+
+;; Exercise 3.45
+;; Louis的方法有很大问题。在执行serialized-exchange时，
+;; 由于serializer已经被调用了，等到执行(account1 'withdraw)和
+;; (account2 'deposit)时，serializer根本不会被release，这两
+;; 个函数也无法执行。
