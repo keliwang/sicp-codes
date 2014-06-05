@@ -1463,6 +1463,9 @@
   (car stream))
 (define (stream-cdr s)
   (my-force (cdr stream)))
+(define the-empty-stream '())
+(define (stream-null? s)
+  (null? s))
 
 (define (stream-enumerate-interval low high)
   (if (> low high)
