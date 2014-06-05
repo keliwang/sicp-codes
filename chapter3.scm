@@ -1430,6 +1430,13 @@
 	     (clear! cell))))
     the-mutex))
 
+;; Exercise 3.46
+;; test-and-set!可能会在(car cell)之后被打断，
+;; 从而导致两个对test-and-set!的调用都成功的
+;; 上了锁，也失去了上锁的效果。
+
+;; 
+
 ;; Streams
 (define (stream-ref s n)
   (if (= n 0)
