@@ -1560,3 +1560,11 @@
      (memo-proc (lambda () proc)))))
 (define (force delayed-object)
   (delayed-object))
+
+;; Exercise 3.50
+(define (stream-map proc . argstreams)
+  (if (stream-null? (car argstreams))
+      the-empty-stream
+      (begin (apply proc (map stream-car argstreams))
+	     (apply stream-map
+		    (cons proc (map stream-cdr argstreams))))))
