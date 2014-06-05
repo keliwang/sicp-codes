@@ -1427,7 +1427,8 @@
 	     (if (test-and-set! cell)
 		 (the-mutex 'acquire)))
 	    ((eq? m 'release)
-	     (clear! cell))))))
+	     (clear! cell))))
+    the-mutex))
 
 ;; Streams
 (define (stream-ref s n)
@@ -1474,3 +1475,20 @@
 	 (cons-stream (stream-car stream)
 		      (stream-filter pred (stream-cdr stream))))
 	(else (stream-filter pred (stream-car stream)))))
+
+;; delay and force
+(define (memo-proc proc)
+  (let ((already-run? #f)
+	(result #f))
+    (lambda ()
+      (if (not already-run?)
+	  (begin (set! result (proc))
+		 (set! already-run? #t)
+		 result)
+	  result))))
+(define-syntax my-delay
+  (syntax-rules ()
+    ((my-delay proc)
+     (memo-proc (lambda () proc)))))
+(define (force delayed-object)
+  (delayed-object))
