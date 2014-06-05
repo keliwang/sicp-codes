@@ -1484,6 +1484,12 @@
 			(release-count-lock))))))
     the-semaphore))
 
+;; Exercise 3.48
+;; 为资源加上编号，每次都从小编号开始加锁这个方法有效的原因
+;; 在于将加锁的顺序固定，这样就不会出现两个线程同时为不同
+;; 的分享变量加锁的情况了。
+;; 代码略
+
 ;; Streams
 (define (stream-ref s n)
   (if (= n 0)
