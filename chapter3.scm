@@ -1559,7 +1559,7 @@
 	((pred (stream-car stream))
 	 (cons-stream (stream-car stream)
 		      (stream-filter pred (stream-cdr stream))))
-	(else (stream-filter pred (stream-car stream)))))
+	(else (stream-filter pred (stream-cdr stream)))))
 
 ;; Exercise 3.50
 (define (stream-map-multi-streams proc . argstreams)
@@ -1588,3 +1588,31 @@
 ;; =>
 ;; 6
 ;; 7
+
+;; Exercise 3.52
+(define sum 0)
+(define (accum x)
+  (set! sum (+ x sum))
+  sum)
+(define seq (stream-map accum
+			(stream-enumerate-interval 1 20)))
+(define y (stream-filter even? seq))
+(define z
+  (stream-filter (lambda (x) (= (remainder x 5) 0))
+		 seq))
+;; (stream-ref y 7)
+;; => 137
+;; (display-stream z)
+;; =>
+;; 10
+;; 15
+;; 45
+;; 55
+;; 105
+;; 120
+;; 190
+;; 210
+;; 如果将delay的实现改为无memo-proc的版本，那么结果必然是不同的。
+;; memo-proc的作用是避免多次计算，同时保留计算结果，如果将memo-proc
+;; 删去，则每次执行force都会重新计算被delay的对象的值，由于我们
+;; 这里的delay过的对象是有副作用的，所以会导致sum的值不断被改变。
