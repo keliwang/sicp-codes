@@ -1616,3 +1616,11 @@
 ;; memo-proc的作用是避免多次计算，同时保留计算结果，如果将memo-proc
 ;; 删去，则每次执行force都会重新计算被delay的对象的值，由于我们
 ;; 这里的delay过的对象是有副作用的，所以会导致sum的值不断被改变。
+
+(define (integers-starting-from n)
+  (cons-stream n (integers-starting-from (+ n 1))))
+(define integers (integers-starting-from 1))
+(define (divisible? x y) (= (remainder x y) 0))
+(define no-sevens
+  (stream-filter (lambda (x) (not (divisible? x 7)))
+		 integers))
