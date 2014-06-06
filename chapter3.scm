@@ -1624,3 +1624,16 @@
 (define no-sevens
   (stream-filter (lambda (x) (not (divisible? x 7)))
 		 integers))
+
+(define (fibgen a b)
+  (cons-stream a (fibgen b (+ a b))))
+(define fibs (fibgen 0 1))
+
+(define (sieve stream)
+  (cons-stream
+   (stream-car stream)
+   (sieve (stream-filter
+	   (lambda (x)
+	     (not (divisible? x (stream-car stream))))
+	   (stream-cdr stream)))))
+(define primes (sieve (integers-starting-from 2)))
