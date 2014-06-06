@@ -1495,6 +1495,38 @@
 ;; 对方的帐号。假如某时刻，A和B在购物时发现自己帐号的钱不够，
 ;; 于是同时想要去取对方帐号里的钱，这是死锁现象又出现了。
 
+;; delay and force
+(define (memo-proc proc)
+  (let ((already-run? #f)
+	(result #f))
+    (lambda ()
+      (if (not already-run?)
+	  (begin (set! result (proc))
+		 (set! already-run? #t)
+		 result)
+	  result))))
+(define-syntax my-delay
+  (syntax-rules ()
+    ((my-delay proc)
+     (memo-proc (lambda () proc)))))
+(define (my-force delayed-object)
+  (delayed-object))
+
+;; Must be a special form,
+;; or a and b will be evaluated
+;; when applying cons-stream.
+(define-syntax cons-stream
+  (syntax-rules ()
+    ((cons-stream a b)
+     (cons a (my-delay b)))))
+(define (stream-car s)
+  (car s))
+(define (stream-cdr s)
+  (my-force (cdr s)))
+(define the-empty-stream '())
+(define (stream-null? s)
+  (null? s))
+
 ;; Streams
 (define (stream-ref s n)
   (if (= n 0)
@@ -1517,21 +1549,6 @@
   (newline)
   (display x))
 
-;; Must be a special form,
-;; or a and b will be evaluated
-;; when applying cons-stream.
-(define-syntax cons-stream
-  (syntax-rules ()
-    ((cons-stream a b)
-     (cons a (my-delay b)))))
-(define (stream-car s)
-  (car stream))
-(define (stream-cdr s)
-  (my-force (cdr stream)))
-(define the-empty-stream '())
-(define (stream-null? s)
-  (null? s))
-
 (define (stream-enumerate-interval low high)
   (if (> low high)
       the-empty-stream
@@ -1544,27 +1561,30 @@
 		      (stream-filter pred (stream-cdr stream))))
 	(else (stream-filter pred (stream-car stream)))))
 
-;; delay and force
-(define (memo-proc proc)
-  (let ((already-run? #f)
-	(result #f))
-    (lambda ()
-      (if (not already-run?)
-	  (begin (set! result (proc))
-		 (set! already-run? #t)
-		 result)
-	  result))))
-(define-syntax my-delay
-  (syntax-rules ()
-    ((my-delay proc)
-     (memo-proc (lambda () proc)))))
-(define (force delayed-object)
-  (delayed-object))
-
 ;; Exercise 3.50
-(define (stream-map proc . argstreams)
-  (if (stream-null? (car argstreams))
+(define (stream-map-multi-streams proc . argstreams)
+  (if (null? (car argstreams))
       the-empty-stream
-      (begin (apply proc (map stream-car argstreams))
-	     (apply stream-map
-		    (cons proc (map stream-cdr argstreams))))))
+      (cons-stream (apply proc (map stream-car argstreams))
+		   (apply stream-map-multi-streams
+			  (cons proc (map stream-cdr argstreams))))))
+
+;; Exercise 3.51
+(define (show x)
+  (display-line x)
+  x)
+;; (define x
+;;   (stream-map show
+;; 	      (stream-enumerate-interval 0 10)))
+;; => 0
+;; (stream-ref x 5)
+;; =>
+;; 1
+;; 2
+;; 3
+;; 4
+;; 5
+;; (stream-ref x 7)
+;; =>
+;; 6
+;; 7
