@@ -1663,3 +1663,8 @@
 	  ((divisible? n (stream-car ps)) #f)
 	  (else (iter (stream-cdr ps)))))
   (iter primes))
+
+;; Exercise 3.53
+;; (define s (cons-stream 1 (add-streams s s)))
+;; 上面的s会产生1 2 4 8 16 32 ...这样的序列
+
