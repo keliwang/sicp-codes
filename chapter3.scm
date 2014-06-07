@@ -1673,3 +1673,10 @@
   (stream-map-multi-streams * s1 s2))
 (define factorials
   (cons-stream 1 (mul-stream (stream-cdr integers) factorials)))
+
+;; Exercise 3.55
+(define (partial-sum stream)
+  (cons-stream
+   (stream-car stream)
+   (add-streams (stream-cdr stream)
+		(partial-sum stream))))
