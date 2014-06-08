@@ -1715,3 +1715,16 @@
    (expand (remainder (* num radix) den) den radix)))
 ;; (expand 1 7 10)产生的是1.0/7.0的各位值，即1 4 2 8 ...
 ;; (expand 3 8 10)同上，它产生的是3 7 5 0 0 ...
+
+;; Exercise 3.59
+(define (integrate-series stream)
+  (stream-map-multi-streams / s integers))
+
+(define exp-series
+  (cons-stream 1 (integrate-series exp-series)))
+(define consine-series
+  (cons-stream 1 (neg-stream (integrate-series sine-series))))
+(define sine-series
+  (cons-stream 0 (integrate-series consine-series)))
+(define (neg-stream s)
+  (stream-map (lambda (x) (- x)) s))
