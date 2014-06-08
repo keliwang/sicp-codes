@@ -1701,3 +1701,9 @@
 (define S (cons-stream 1 (merge-stream (scale-stream S 2)
 				       (merge-stream (scale-stream S 3)
 						     (scale-stream S 5)))))
+
+;; Exercise 3.57
+;; 使用了memo-proc之后，所有重复的计算都只需要计算一次，所以
+;; 计算第n个fibonacci数只需要进行n-1次加法。如果我们不使用memo-proc
+;; 所有的加法运算都需要执行，因而其计算次数有公式：N(n) = N(n-1)+N(n-2)+1
+;; 这是一个指数增长的过程。
