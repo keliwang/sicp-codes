@@ -1707,3 +1707,11 @@
 ;; 计算第n个fibonacci数只需要进行n-1次加法。如果我们不使用memo-proc
 ;; 所有的加法运算都需要执行，因而其计算次数有公式：N(n) = N(n-1)+N(n-2)+1
 ;; 这是一个指数增长的过程。
+
+;; Exercise 3.58
+(define (expand num den radix)
+  (cons-stream
+   (quotient (* num radix) den)
+   (expand (remainder (* num radix) den) den radix)))
+;; (expand 1 7 10)产生的是1.0/7.0的各位值，即1 4 2 8 ...
+;; (expand 3 8 10)同上，它产生的是3 7 5 0 0 ...
