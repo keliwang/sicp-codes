@@ -1736,3 +1736,12 @@
    (add-streams
     (scale-stream (stream-cdr s2) (stream-car s1))
     (mul-series (stream-cdr s1) s2))))
+
+;; Exercise 3.61
+(define (invert-unit-series s)
+  (cons-stream
+   1
+   (neg-stream
+    (mul-series
+     (invert-unit-series s)
+     (stream-cdr s)))))
