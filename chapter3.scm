@@ -1745,3 +1745,13 @@
     (mul-series
      (invert-unit-series s)
      (stream-cdr s)))))
+
+;; Exercise 3.62
+(define (div-series num denom)
+  (let ((denomer (stream-car denom)))
+    (if (zero? denomer)
+	(error "DIV-SERIES" "cannot div by 0")
+	(mul-series
+	 (invert-unit-series
+	  (scale-stream denom denomer))
+	 num))))
