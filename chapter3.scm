@@ -1755,3 +1755,23 @@
 	 (invert-unit-series
 	  (scale-stream denom denomer))
 	 num))))
+
+
+;; formulating iterations as stream processes
+(define (average x y)
+  (/ (+ x y) 2))
+(define (sqrt-improve guess x)
+  (average guess (/ x guess)))
+(define (sqrt-stream x)
+  (define guesses
+    (cons-stream
+     1.0
+     (stream-map-multi-streams (lambda (guess) (sqrt-improve guess x))
+			       guesses)))
+  guesses)
+
+(define (pi-summands n)
+  (cons-stream (/ 1.0 n)
+	       (stream-map - (pi-summands (+ n 2)))))
+(define pi-stream
+  (scale-stream (partial-sum (pi-summands 1)) 4))
