@@ -1800,3 +1800,16 @@
 ;; 不是同一个stream，所以需要重复计算。一开始的实现
 ;; 通过guesses这一个stream来实现，避免了重复计算。
 ;; 如果将memo-proc取消的话，计算量应该是相同的。
+
+;; Exercise 3.64
+(define (stream-cadr s)
+  (stream-car (stream-cdr s)))
+(define (stream-limit s tolerance)
+  (if (< (abs (-
+	       (stream-car s)
+	       (stream-cadr s)))
+	 tolerance)
+      (stream-cadr s)
+      (stream-limit (stream-cdr s) tolerance)))
+(define (sqrt x tolerance)
+  (stream-limit (sqrt-stream x) tolerance))
