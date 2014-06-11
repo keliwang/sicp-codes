@@ -1788,3 +1788,15 @@
   (cons-stream s (make-tableau transform (transform s))))
 (define (accelerated-sequence transform s)
   (stream-map stream-car (make-tableau transform s)))
+
+;; Exercise 3.63
+;; (define (sqrt-stream x)
+;;   (cons-stream 1.0 (stream-map
+;; 		    (lambda (guess)
+;; 		      (sqrt-improve guess x))
+;; 		    (sqrt-stream x))))
+;; 上面的实现效率的确要低。因为它又需要重复计算了。
+;; sqrt-stream内部又需要计算sqrt-stream，但是它们并
+;; 不是同一个stream，所以需要重复计算。一开始的实现
+;; 通过guesses这一个stream来实现，避免了重复计算。
+;; 如果将memo-proc取消的话，计算量应该是相同的。
