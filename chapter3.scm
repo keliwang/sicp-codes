@@ -1840,3 +1840,6 @@
     (stream-map (lambda (x) (list (stream-car s) x))
 		(stream-cdr t))
     (pairs (stream-cdr s) (stream-cdr t)))))
+
+;; Exercise 3.66
+;; N(i, j) = 2^(i-1)(max(1, 2(j-i)+1)-2
