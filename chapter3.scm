@@ -1843,3 +1843,20 @@
 
 ;; Exercise 3.66
 ;; N(i, j) = 2^(i-1)(max(1, 2(j-i)+1)-2
+
+;; Exercise 3.67
+(define (show-stream s count)
+  (display (stream-car s))
+  (newline)
+  (if (> count 0)
+      (show-stream (stream-cdr s) (- count 1))))
+(define (new-pairs s t)
+  (cons-stream
+   (list (stream-car s) (stream-car t))
+   (interleave
+    (stream-map (lambda (x) (list (stream-car s) x))
+		(stream-cdr t))
+    (interleave
+     (stream-map (lambda (x) (list x (stream-car t)))
+		 (stream-cdr s))
+     (pairs (stream-cdr s) (stream-cdr t))))))
