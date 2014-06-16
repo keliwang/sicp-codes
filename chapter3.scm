@@ -1860,3 +1860,13 @@
      (stream-map (lambda (x) (list x (stream-car t)))
 		 (stream-cdr s))
      (pairs (stream-cdr s) (stream-cdr t))))))
+
+;; Exercise 3.68
+;; (define (pairs s t)
+;;   (interleave
+;;    (stream-map (lambda (x) (list (stream-car s) x))
+;; 	       t)
+;;    (pairs (stream-cdr s) (stream-cdr t))))
+;; 这个函数在调用(pairs integers integers)会导致无限递归
+;; interleave和pairs会被不断调用。原先的调用使用了
+;; cons-stream来延迟了interleave的调用。
