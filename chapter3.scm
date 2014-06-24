@@ -1870,3 +1870,18 @@
 ;; 这个函数在调用(pairs integers integers)会导致无限递归
 ;; interleave和pairs会被不断调用。原先的调用使用了
 ;; cons-stream来延迟了interleave的调用。
+
+;; Exercise 3.69
+(define (triples s t u)
+  (cons-stream
+   (list (stream-car s) (stream-car t) (stream-car u))
+   (interleave
+    (stream-map (lambda (x) (cons (stream-car s) x))
+		(pairs t (stream-cdr u)))
+    (triples (stream-cdr s) (stream-cdr t) (stream-cdr u)))))
+(define tri (triples integers integers integers))
+(define (pythagorean? l)
+  (= (+ (square (car l))
+	(square (cadr l)))
+     (square (caddr l))))
+(define pythagorean-tri (stream-filter pythagorean? tri))
