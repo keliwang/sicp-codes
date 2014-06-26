@@ -1921,3 +1921,23 @@
 		    (+ (* 2 (car x))
 		       (* 3 (cadr x))
 		       (* 5 (car x) (cadr x))))))
+
+;; Exercise 3.71
+(define (cube x)
+  (* x x x))
+(define (ram-weight p)
+  (+ (cube (car p))
+     (cube (cadr p))))
+(define stream-cubes
+  (weighted-pairs integers
+		  integers
+		  ram-weight))
+(define (search-ramanujan-numbers pairs)
+  (let ((w1 (ram-weight (stream-car pairs)))
+	(w2 (ram-weight (stream-cadr pairs))))
+    (if (= w1 w2)
+	(cons-stream w1 (search-ramanujan-numbers (stream-cdr pairs)))
+	(search-ramanujan-numbers (stream-cdr pairs)))))
+(define ramanujan-numbers
+  (search-ramanujan-numbers stream-cubes))
+;; 1729, 4104, 13832, 20683, 32832, 39312
