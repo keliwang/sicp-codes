@@ -1941,3 +1941,32 @@
 (define ramanujan-numbers
   (search-ramanujan-numbers stream-cubes))
 ;; 1729, 4104, 13832, 20683, 32832, 39312
+
+;; Exercise 3.72
+(define (square-weight p)
+  (+ (square (car p))
+     (square (cadr p))))
+(define stream-squares
+  (weighted-pairs integers
+		  integers
+		  square-weight))
+(define (search-ex-3-72 pairs)
+  (let* ((w1 (square-weight (stream-car pairs)))
+	 (rest-of-pairs (stream-cdr pairs))
+	 (w2 (square-weight (stream-car rest-of-pairs)))
+	 (rest-of-rest-of-pairs (stream-cdr rest-of-pairs))
+	 (w3 (square-weight (stream-car rest-of-rest-of-pairs))))
+    (cond ((= w1 w2 w3)
+	   (newline)
+	   (display (stream-car pairs))
+	   (newline)
+	   (display (stream-car rest-of-pairs))
+	   (newline)
+	   (display (stream-car rest-of-rest-of-pairs))
+	   (cons-stream w1 (search-ex-3-72 (stream-cdr rest-of-rest-of-pairs))))
+	  ((= w2 w3)
+	   (search-ex-3-72 rest-of-pairs))
+	  (else
+	   (search-ex-3-72 rest-of-rest-of-pairs)))))
+(define ex-3-72-stream
+  (search-ex-3-72 stream-squares))
