@@ -1970,3 +1970,11 @@
 	   (search-ex-3-72 rest-of-rest-of-pairs)))))
 (define ex-3-72-stream
   (search-ex-3-72 stream-squares))
+
+
+(define (integral integrand initial-value dt)
+  (define int
+    (cons-stream initial-value
+		 (add-streams (scale-stream integrand dt)
+			      int)))
+  int)
