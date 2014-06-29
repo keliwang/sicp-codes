@@ -1978,3 +1978,9 @@
 		 (add-streams (scale-stream integrand dt)
 			      int)))
   int)
+
+;; Exercise 3.73
+(define (RC R C dt)
+  (lambda (i v0)
+    (add-streams (integral (scale-stream ones (/ 1.0 C)) v0 dt)
+		 (scale-stream i R))))
