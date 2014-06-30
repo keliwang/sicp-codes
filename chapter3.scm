@@ -1984,3 +1984,20 @@
   (lambda (i v0)
     (add-streams (integral (scale-stream ones (/ 1.0 C)) v0 dt)
 		 (scale-stream i R))))
+
+;; Exercise 3.74
+(define (make-zero-crossings input-stream last-value)
+  (cons-stream
+   (sign-change-detector
+    (stream-car input-stream)
+    last-value)
+   (make-zero-crossings
+    (stream-cdr input-stream)
+    (stream-car input-stream))))
+(define zero-crossings
+  (make-zero-crossings
+   sense-data 0))
+(define zero-crossings
+  (stream-map-multi-streams sign-change-detector
+			    sense-data
+			    (cons-stream 0 sense-data)))
