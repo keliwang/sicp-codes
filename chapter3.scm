@@ -2022,3 +2022,10 @@
 ;;     (stream-cdr input-stream)
 ;;     (stream-car input-stream)
 ;;     avpt)))
+
+;; Exercise 3.75
+(define (smooth input-stream)
+  (let ((avpt (average (stream-car input-stream)
+		       (stream-cadr input-stream)))))
+  (cons-stream avpt
+	       (smooth (stream-cdr input-stream))))
