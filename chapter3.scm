@@ -1971,7 +1971,6 @@
 (define ex-3-72-stream
   (search-ex-3-72 stream-squares))
 
-
 (define (integral integrand initial-value dt)
   (define int
     (cons-stream initial-value
@@ -1986,6 +1985,13 @@
 		 (scale-stream i R))))
 
 ;; Exercise 3.74
+(define sense-data integers)
+(define (sign-change-detector new old)
+  (cond ((and (< old 0) (> new 0))
+	 1)
+	((and (> old 0) (< new 0))
+	 -1)
+	(else 0)))
 (define (make-zero-crossings input-stream last-value)
   (cons-stream
    (sign-change-detector
@@ -2026,6 +2032,19 @@
 ;; Exercise 3.75
 (define (smooth input-stream)
   (let ((avpt (average (stream-car input-stream)
-		       (stream-cadr input-stream)))))
-  (cons-stream avpt
-	       (smooth (stream-cdr input-stream))))
+		       (stream-cadr input-stream))))
+    (cons-stream avpt
+		 (smooth (stream-cdr input-stream)))))
+
+;; delayed evaluation
+(define (integral2 delayed-intergrand initial-value dt)
+  (define int
+    (cons-stream
+     initial-value
+     (let ((integrand (force delayed-intergrand)))
+       (add-streams (scale-stream integrand dt) int))))
+  int)
+(define (solve f y0 dt)
+  (define y (integral2 (delay dy) y0 dt))
+  (define dy (stream-map f y))
+  y)
