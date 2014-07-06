@@ -2037,14 +2037,25 @@
 		 (smooth (stream-cdr input-stream)))))
 
 ;; delayed evaluation
-(define (integral2 delayed-intergrand initial-value dt)
+(define (integral2 delayed-integrand initial-value dt)
   (define int
     (cons-stream
      initial-value
-     (let ((integrand (force delayed-intergrand)))
+     (let ((integrand (force delayed-integrand)))
        (add-streams (scale-stream integrand dt) int))))
   int)
 (define (solve f y0 dt)
   (define y (integral2 (delay dy) y0 dt))
   (define dy (stream-map f y))
   y)
+
+;; Exercise 3.77
+(define (integral3 delayed-integrand initial-value dt)
+  (cons-stream initial-value
+	       (let ((integrand (force delayed-integrand)))
+		 (if (stream-null? integrand)
+		     the-empty-stream
+		     (integral3 (delay (stream-cdr integrand))
+				(+ (* dt (stream-car integrand))
+				   initial-value)
+				dt)))))
