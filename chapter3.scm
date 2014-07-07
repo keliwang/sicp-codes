@@ -2067,3 +2067,10 @@
   (define ddy (add-streams (scale-stream dy a)
 			   (scale-stream y b)))
   y)
+
+;; Exercise 3.79
+(define (solve-2nd-general f dt y0 dy0)
+  (define y (integral2 (delay dy) y0 dt))
+  (define dy (integral2 (delay ddy) dy0 dt))
+  (define ddy (stream-map f dy y))
+  y)
