@@ -2074,3 +2074,15 @@
   (define dy (integral2 (delay ddy) dy0 dt))
   (define ddy (stream-map f dy y))
   y)
+
+;; Exercise 3.80
+(define (RLC R L C dt)
+  (lambda (vC0 iL0)
+    (define vC (integral2 (delay dvC) vC0 dt))
+    (define iL (integral2 (delay diL) iL0 dt))
+    (define dvC (scale-stream iL (/ -1.0 C)))
+    (define diL (add-streams (scale-stream vC (/ 1.0 L))
+			     (scale-stream iL (/ (- R) L))))
+    (stream-map-multi-streams (lambda (x1 x2)
+				(cons x1 x2))
+			      vC iL)))
