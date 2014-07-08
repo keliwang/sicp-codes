@@ -1811,7 +1811,7 @@
 	 tolerance)
       (stream-cadr s)
       (stream-limit (stream-cdr s) tolerance)))
-(define (sqrt x tolerance)
+(define (sqrt1 x tolerance)
   (stream-limit (sqrt-stream x) tolerance))
 
 ;; Exercise 3.65
@@ -2086,3 +2086,37 @@
     (stream-map-multi-streams (lambda (x1 x2)
 				(cons x1 x2))
 			      vC iL)))
+
+
+(define random-init 137)
+(define (rand-update x)
+  (let ((a (expt 2 32))
+	(c 1103515245)
+	(m 12345))
+    (modulo (+ (* a x) c) m)))
+(define random-numbers
+  (cons-stream
+   random-init
+   (stream-map rand-update random-numbers)))
+(define (map-successive-pairs f s)
+  (cons-stream
+   (f (stream-car s) (stream-cadr s))
+   (map-successive-pairs f (stream-cdr (stream-cdr s)))))
+(define cesaro-stream
+  (map-successive-pairs
+   (lambda (r1 r2) (= (gcd r1 r2) 1))
+   random-numbers))
+
+(define (monte-carlo experiment-stream passed failed)
+  (define (next passed failed)
+    (cons-stream
+     (/ passed (+ passed failed))
+     (monte-carlo
+      (stream-cdr experiment-stream) passed failed)))
+  (if (stream-car experiment-stream)
+      (next (+ passed 1) failed)
+      (next passed (+ failed 1))))
+(define pi
+  (stream-map-multi-streams
+   (lambda (p) (sqrt (/ 6 p)))
+   (monte-carlo cesaro-stream 0 0)))
