@@ -2133,3 +2133,15 @@
 (define test-stream-2 (cons-stream 'generate
 				   (cons-stream 237
 						(cons-stream 'generate test-stream-1))))
+
+;; Exercise 3.82
+(define (generate-random-in-range low high)
+  (cons-stream (+ low (random (- high low)))
+	       (generate-random-in-range low high)))
+(define (generate-integral-stream pred x1 x2 y1 y2)
+  (stream-map-multi-streams pred
+			    (generate-random-in-range x1 x2)
+			    (generate-random-in-range y1 y2)))
+(define (estimate-integral-stream pred x1 x2 y1 y2)
+  (scale-stream (monte-carlo (generate-integral-stream pred x1 x2 y1 y2) 0 0)
+		(* (- x2 x1) (- y2 y1))))
