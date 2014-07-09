@@ -2120,3 +2120,16 @@
   (stream-map-multi-streams
    (lambda (p) (sqrt (/ 6 p)))
    (monte-carlo cesaro-stream 0 0)))
+
+;; Exercise 3.81
+(define (random-numbers-proc stream-in)
+  (define (action x m)
+    (cond ((eq? m 'generate)
+	   (rand-update x))
+	  (else m)))
+  (cons-stream random-init
+	       (stream-map-multi-streams action (random-numbers-proc stream-in) stream-in)))
+(define test-stream-1 (cons-stream 'generate test-stream-1))
+(define test-stream-2 (cons-stream 'generate
+				   (cons-stream 237
+						(cons-stream 'generate test-stream-1))))
